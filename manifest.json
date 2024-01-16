@@ -1,0 +1,6 @@
+{
+    "manifest_version": 3,
+    "name": "Chrome Extension Template",
+    "version": "0.0.0",
+    "action": { "default_popup": "index.html" }
+}
