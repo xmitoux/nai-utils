@@ -1,24 +1,30 @@
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import { crx } from '@crxjs/vite-plugin';
-import manifest from './manifest.json' assert { type: 'json' }; // Node >=17
 import path from 'path';
+import { manifest } from './manifest.config';
 
 // https://vitejs.dev/config/
-export default defineConfig({
-    plugins: [vue(), crx({ manifest })],
+export default ({ mode }) => {
+    const isProd = mode === 'production';
 
-    resolve: {
-        alias: {
-            '@': path.resolve(__dirname, 'src'),
+    return defineConfig({
+        plugins: [vue(), crx({ manifest })],
+        resolve: {
+            alias: {
+                '@': path.resolve(__dirname, 'src'),
+            },
         },
-    },
-
-    server: {
-        port: 5173,
-        strictPort: true,
-        hmr: {
+        build: {
+            // 開発時はminifyしない
+            minify: isProd,
+        },
+        server: {
             port: 5173,
+            strictPort: true,
+            hmr: {
+                port: 5173,
+            },
         },
-    },
-});
+    });
+};
