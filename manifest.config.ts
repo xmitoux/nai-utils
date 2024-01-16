@@ -14,7 +14,7 @@ export const manifest = defineManifest((env) => ({
     content_scripts: [
         {
             matches: ['https://novelai.net/image'],
-            js: ['./src/content-scripts/wheel-thumbnails'],
+            js: ['./src/content'],
         },
     ],
 }));
