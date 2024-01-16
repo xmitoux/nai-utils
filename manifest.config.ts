@@ -11,4 +11,10 @@ export const manifest = defineManifest((env) => ({
     action: {
         default_popup: 'index.html',
     },
+    content_scripts: [
+        {
+            matches: ['https://novelai.net/image'],
+            js: ['./src/content-scripts/wheel-thumbnails'],
+        },
+    ],
 }));
