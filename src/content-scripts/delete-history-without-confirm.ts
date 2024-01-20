@@ -1,4 +1,4 @@
-export const deleteHistory = () => {
+export const deleteHistoryWithoutConfirm = () => {
     const observer = new MutationObserver((_) => {
         const buttons = document.querySelectorAll('button');
 
