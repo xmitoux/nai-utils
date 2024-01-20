@@ -1,5 +1,5 @@
 export const deleteHistoryWithoutConfirm = () => {
-    const observer = new MutationObserver((_) => {
+    const proc = () => {
         const buttons = document.querySelectorAll('button');
 
         buttons.forEach((button) => {
@@ -8,7 +8,8 @@ export const deleteHistoryWithoutConfirm = () => {
                 button.click();
             }
         });
-    });
+    };
 
+    const observer = new MutationObserver(proc);
     observer.observe(document.body, { childList: true, subtree: true });
 };

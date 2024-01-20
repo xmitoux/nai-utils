@@ -1,5 +1,5 @@
 export const saveHistoryShortcut = () => {
-    const observer = new MutationObserver((_) => {
+    const proc = () => {
         // 保存ボタンの親要素を取得
         const parentDiv = document.querySelector('div[data-projection-id="10"]');
         if (!parentDiv) {
@@ -20,8 +20,9 @@ export const saveHistoryShortcut = () => {
             thumbnailContainer.addEventListener('contextmenu', onSave);
             thumbnailContainer.dataset.contextmenuListenerAdded = 'true';
         }
-    });
+    };
 
     // inpaint等で画面が切り替わるとイベントリスナが破壊されるので監視して登録
+    const observer = new MutationObserver(proc);
     observer.observe(document.body, { childList: true, subtree: true });
 };
