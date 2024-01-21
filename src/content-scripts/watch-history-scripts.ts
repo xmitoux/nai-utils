@@ -1,4 +1,4 @@
-export const wheelHistory = () => {
+export const watchHistoryScripts = () => {
     let overlayParentClass = '';
     let overlay: HTMLDivElement | null = null;
 
