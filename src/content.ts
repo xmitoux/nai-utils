@@ -31,9 +31,9 @@ chrome.runtime.sendMessage({ action: ACTION_GET_SETTINGS }, (response) => {
         saveHistoryShortcut();
     }
 
-    watchHistoryScripts();
-
     if (extensionSettings.shrinkPromptArea) {
         shrinkPromptArea();
     }
+
+    watchHistoryScripts(extensionSettings);
 });

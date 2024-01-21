@@ -1,6 +1,6 @@
 import { createClassName } from '@/utils';
 
-export const watchHistoryScripts = () => {
+export const watchHistoryScripts = (extensionSettings: ExtensionSettings) => {
     let overlayParentClass = '';
     let overlay: HTMLDivElement | null = null;
 
@@ -49,10 +49,11 @@ export const watchHistoryScripts = () => {
     };
 
     // inpaint等で画面が切り替わると各要素が再生成されるので変更を監視
-    new MutationObserver(overlayObserver).observe(document.body, {
-        childList: true,
-        subtree: true,
-    });
+    extensionSettings.highlightViewedHistory &&
+        new MutationObserver(overlayObserver).observe(document.body, {
+            childList: true,
+            subtree: true,
+        });
 
     let selectedIndex = 0;
     let thumbnails: NodeListOf<HTMLDivElement>;
@@ -85,7 +86,10 @@ export const watchHistoryScripts = () => {
                 selectThumbnail(selectedIndex + direction);
             };
 
-            if (!hisotryContainer.dataset.wheelEventListenerAdded) {
+            if (
+                extensionSettings.selectHistoryWithMouseWheel &&
+                !hisotryContainer.dataset.wheelEventListenerAdded
+            ) {
                 // wheelイベントリスナが未登録なら登録
                 hisotryContainer.addEventListener('wheel', onWheel);
                 hisotryContainer.dataset.wheelEventListenerAdded = 'true';
@@ -96,9 +100,11 @@ export const watchHistoryScripts = () => {
                 // ホイール選択とインデックスを一致させる
                 selectedIndex = index;
 
-                // 視聴済みオーバーレイ表示処理
-                // (クリック直後はオーバーレイしないようにフラグは後で設定)
-                overlay!.style.display = thumbnail.dataset.watched ? '' : 'none';
+                if (overlay) {
+                    // 視聴済みオーバーレイ表示処理
+                    // (クリック直後はオーバーレイしないようにフラグは後で設定)
+                    overlay.style.display = thumbnail.dataset.watched ? '' : 'none';
+                }
 
                 if (!thumbnail.dataset.watched) {
                     // 視聴済みフラグを登録
@@ -127,7 +133,9 @@ export const watchHistoryScripts = () => {
             });
 
             // 新規生成時はオーバーレイを消す
-            overlay!.style.display = 'none';
+            if (overlay) {
+                overlay.style.display = 'none';
+            }
         };
 
         // フラグの管理がややこしくなるので、画面全体ではなく履歴サムネが増えるのだけを監視する
