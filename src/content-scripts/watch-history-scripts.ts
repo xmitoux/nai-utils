@@ -1,3 +1,5 @@
+import { createClassName } from '@/utils';
+
 export const watchHistoryScripts = () => {
     let overlayParentClass = '';
     let overlay: HTMLDivElement | null = null;
@@ -15,10 +17,7 @@ export const watchHistoryScripts = () => {
         // 親要素特定用にclass名を1回だけ保持
         if (!overlayParentClass) {
             // querySelector用に"."で結合
-            overlayParentClass = overlayParent.className
-                .split(' ')
-                .map((className) => '.' + className)
-                .join('');
+            overlayParentClass = createClassName(overlayParent.className);
         }
 
         const createOverlay = () => {
