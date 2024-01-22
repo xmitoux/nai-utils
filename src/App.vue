@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import HelloWorld from '@/components/HelloWorld.vue';
+import ExtensionSettings from '@/components/ExtensionSettings.vue';
 </script>
 
 <template>
-    <HelloWorld msg="Hello, Chrome extension!" />
+    <ExtensionSettings />
 </template>

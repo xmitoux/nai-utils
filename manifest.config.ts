@@ -5,14 +5,18 @@ const extensionName = 'NAI utils';
 
 export const manifest = defineManifest((env) => ({
     manifest_version: 3,
-    name: env.mode === 'production' ? extensionName : `[dev] ${extensionName}`,
+    name: env.mode === 'production' ? extensionName : `[DEV] ${extensionName}`,
     description: 'Some useful utilities for NAI.',
     version: pkg.version,
     icons: {
         '128': 'icon.png',
     },
+    permissions: ['activeTab', 'storage', 'unlimitedStorage'],
+    options_page: 'index.html',
+    background: {
+        service_worker: './src/background.ts',
+    },
     action: {
-        default_popup: 'index.html',
         default_icon: {
             '128': 'icon.png',
         },
@@ -20,7 +24,7 @@ export const manifest = defineManifest((env) => ({
     content_scripts: [
         {
             matches: ['https://novelai.net/image'],
-            js: ['./src/content'],
+            js: ['./src/content.ts'],
         },
     ],
 }));

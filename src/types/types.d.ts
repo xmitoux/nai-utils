@@ -1,1 +1,9 @@
-type Aqours = 'Chika' | 'Riko' | 'Kanan' | 'Dia' | 'You' | 'Yoshiko' | 'Hanamaru' | 'Mari' | 'Ruby';
+type ExtensionSettings = {
+    disableEnterKeyGeneration: boolean;
+    enableDeleteHistoryWithoutConfirm: boolean;
+    enableHistorySaveShortcut: boolean;
+    hideModelSelector: boolean;
+    shrinkPromptArea: boolean;
+    selectHistoryWithMouseWheel: boolean;
+    highlightViewedHistory: boolean;
+};
