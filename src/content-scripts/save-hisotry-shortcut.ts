@@ -69,9 +69,24 @@ const downloadImage = async () => {
     const link = document.createElement('a');
     link.href = url;
 
-    const fileName = `${dayjs().format('YYYYMMDDHHmmss')}.png`;
+    const now = dayjs().format('YYYYMMDDHHmmss');
+    const seed = getSeed() || '';
+    const fileName = `${now}-${seed}.png`;
     link.download = fileName;
 
     link.click();
     URL.revokeObjectURL(url);
+};
+
+const getSeed = (): string | null => {
+    const spans = document.querySelectorAll('span');
+
+    // シードコピーボタンの直前にあるシード値span要素を探してシードを取得
+    for (const span of spans) {
+        if (span.textContent?.trim() === 'Copy to Seed') {
+            const previousElement = span.previousElementSibling as HTMLSpanElement;
+            return previousElement?.textContent?.trim() ?? null;
+        }
+    }
+    return null;
 };
