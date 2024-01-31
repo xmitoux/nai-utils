@@ -1,5 +1,6 @@
 export const defaultExtensionSettings: ExtensionSettings = {
     disableEnterKeyGeneration: false,
+    generateEverywhere: false,
     datetimeFilename: false,
     hideModelSelector: false,
     enableDeleteHistoryWithoutConfirm: false,

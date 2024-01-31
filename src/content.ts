@@ -15,9 +15,9 @@ chrome.runtime.sendMessage({ action: ACTION_GET_SETTINGS }, (response) => {
 
     const extensionSettings = response.settings as ExtensionSettings;
 
-    if (extensionSettings.disableEnterKeyGeneration) {
-        generationScripts();
-    }
+    generationScripts(extensionSettings);
+    saveImageScripts(extensionSettings);
+    watchHistoryScripts(extensionSettings);
 
     if (extensionSettings.hideModelSelector) {
         noModelSelector();
@@ -30,7 +30,4 @@ chrome.runtime.sendMessage({ action: ACTION_GET_SETTINGS }, (response) => {
     if (extensionSettings.shrinkPromptArea) {
         shrinkPromptArea();
     }
-
-    saveImageScripts(extensionSettings);
-    watchHistoryScripts(extensionSettings);
 });

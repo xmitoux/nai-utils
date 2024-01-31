@@ -1,4 +1,7 @@
-export const generationScripts = () => {
+export const generationScripts = ({
+    disableEnterKeyGeneration,
+    generateEverywhere,
+}: ExtensionSettings) => {
     const handleKeyDown = (event: KeyboardEvent) => {
         if (!event.target) {
             return;
@@ -7,22 +10,26 @@ export const generationScripts = () => {
         const el = event.target as HTMLElement;
 
         // プロンプト欄でのEnterキー生成を抑制
-        if (
-            el.tagName === 'TEXTAREA' &&
-            !(event.ctrlKey || event.metaKey) &&
-            event.key == 'Enter'
-        ) {
-            event.stopPropagation();
-            return;
+        if (disableEnterKeyGeneration) {
+            if (
+                el.tagName === 'TEXTAREA' &&
+                !(event.ctrlKey || event.metaKey) &&
+                event.key == 'Enter'
+            ) {
+                event.stopPropagation();
+                return;
+            }
         }
 
         // ページ内のどこでも Ctrl * Enter で生成
-        if ((event.ctrlKey || event.metaKey) && event.key == 'Enter') {
-            const generateButton = document.querySelector<HTMLButtonElement>(
-                'button:has(span):has(div)',
-            );
-            generateButton?.click();
-            return;
+        if (generateEverywhere) {
+            if ((event.ctrlKey || event.metaKey) && event.key == 'Enter') {
+                const generateButton = document.querySelector<HTMLButtonElement>(
+                    'button:has(span):has(div)',
+                );
+                generateButton?.click();
+                return;
+            }
         }
     };
 
