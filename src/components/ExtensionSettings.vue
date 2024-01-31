@@ -28,6 +28,10 @@ const saveSettings = async () => {
             <ElSwitch v-model="currentSettings.disableEnterKeyGeneration" @change="saveSettings" />
         </ElFormItem>
 
+        <ElFormItem label="画面上のどこでも Ctrl + Enter キーで生成する">
+            <ElSwitch v-model="currentSettings.generateEverywhere" @change="saveSettings" />
+        </ElFormItem>
+
         <ElFormItem label="保存ファイル名を<日時-シード>にする">
             <ElSwitch v-model="currentSettings.datetimeFilename" @change="saveSettings" />
         </ElFormItem>

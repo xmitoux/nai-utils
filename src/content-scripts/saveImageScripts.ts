@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import { createClassName } from '@/utils';
 
-export const saveHistoryShortcut = ({
+export const saveImageScripts = ({
     datetimeFilename,
     enableHistorySaveShortcut,
 }: ExtensionSettings) => {
