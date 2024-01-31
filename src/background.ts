@@ -1,14 +1,5 @@
 import { ACTION_GET_SETTINGS } from './constants/chrome-api';
-
-const defaultSettings: ExtensionSettings = {
-    disableEnterKeyGeneration: false,
-    hideModelSelector: false,
-    enableDeleteHistoryWithoutConfirm: false,
-    enableHistorySaveShortcut: false,
-    selectHistoryWithMouseWheel: false,
-    highlightViewedHistory: false,
-    shrinkPromptArea: false,
-};
+import { defaultExtensionSettings } from './utils';
 
 chrome.action.onClicked.addListener(() => {
     chrome.tabs.create({ url: 'index.html' });
@@ -16,7 +7,7 @@ chrome.action.onClicked.addListener(() => {
     chrome.storage.local.get().then((settings) => {
         if (!Object.keys(settings).length) {
             // インストール直後は設定が無なのでデフォルト値を設定
-            chrome.storage.local.set(defaultSettings);
+            chrome.storage.local.set(defaultExtensionSettings);
         }
     });
 });

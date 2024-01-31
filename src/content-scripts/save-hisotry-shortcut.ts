@@ -1,6 +1,10 @@
+import dayjs from 'dayjs';
 import { createClassName } from '@/utils';
 
-export const saveHistoryShortcut = () => {
+export const saveHistoryShortcut = ({
+    datetimeFilename,
+    enableHistorySaveShortcut,
+}: ExtensionSettings) => {
     let saveButtonIconClass = '';
 
     const proc = () => {
@@ -30,20 +34,65 @@ export const saveHistoryShortcut = () => {
             saveButton = saveButtonIconDiv.parentNode as HTMLButtonElement;
         }
 
-        const onSave = (event: MouseEvent) => {
-            event.preventDefault();
-            saveButton!.click();
-        };
-
         const thumbnailContainer = document.getElementById('historyContainer')!;
 
         // 既にイベントリスナが追加されていないか確認
-        if (!thumbnailContainer.dataset.contextmenuListenerAdded) {
-            thumbnailContainer.addEventListener('contextmenu', onSave);
-            thumbnailContainer.dataset.contextmenuListenerAdded = 'true';
+        if (thumbnailContainer.dataset.contextmenuListenerAdded) {
+            return;
         }
+
+        // ファイル名を日時にして保存するボタンをクローンして置き換え
+        const saveButtonClone = saveButton.cloneNode(true) as HTMLButtonElement;
+        saveButtonClone.addEventListener('click', () =>
+            // 設定で動作切り替え
+            datetimeFilename ? downloadDatetimeNamedImage() : saveButton!.click(),
+        );
+        saveButton.style.display = 'none';
+        saveButton.parentNode!.insertBefore(saveButtonClone, saveButton);
+
+        // 履歴エリアに右クリック保存イベントを追加
+        const onSave = (event: MouseEvent) => {
+            event.preventDefault();
+            saveButtonClone.click();
+        };
+        enableHistorySaveShortcut && thumbnailContainer.addEventListener('contextmenu', onSave);
+        thumbnailContainer.dataset.contextmenuListenerAdded = 'true';
     };
 
     // inpaint等で画面が切り替わるとイベントリスナが破壊されるので監視して登録
     new MutationObserver(proc).observe(document.body, { childList: true, subtree: true });
+};
+
+const downloadDatetimeNamedImage = async () => {
+    const imageElement = document.querySelector<HTMLImageElement>('img')!;
+
+    // Blob URLからBlobを取得
+    const response = await fetch(imageElement.src);
+    const blob = await response.blob();
+
+    // Blobからダウンロード用のURLを作成
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+
+    const now = dayjs().format('YYYYMMDDHHmmss');
+    const seed = getSeed() || '';
+    const fileName = `${now}-${seed}.png`;
+    link.download = fileName;
+
+    link.click();
+    URL.revokeObjectURL(url);
+};
+
+const getSeed = (): string | null => {
+    const spans = document.querySelectorAll('span');
+
+    // シードコピーボタンの直前にあるシード値span要素を探してシードを取得
+    for (const span of spans) {
+        if (span.textContent?.trim() === 'Copy to Seed') {
+            const previousElement = span.previousElementSibling as HTMLSpanElement;
+            return previousElement?.textContent?.trim() ?? null;
+        }
+    }
+    return null;
 };
