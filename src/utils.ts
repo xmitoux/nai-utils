@@ -1,3 +1,14 @@
+export const defaultExtensionSettings: ExtensionSettings = {
+    disableEnterKeyGeneration: false,
+    datetimeFilename: false,
+    hideModelSelector: false,
+    enableDeleteHistoryWithoutConfirm: false,
+    enableHistorySaveShortcut: false,
+    selectHistoryWithMouseWheel: false,
+    highlightViewedHistory: false,
+    shrinkPromptArea: false,
+};
+
 /**
  * querySelectorで指定する'.'繋ぎのクラス名を作成
  */

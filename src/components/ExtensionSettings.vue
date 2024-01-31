@@ -1,18 +1,11 @@
 <script setup lang="ts">
+import { ref, onMounted } from 'vue';
+import { ElForm, ElFormItem, ElSwitch } from 'element-plus';
 import { ACTION_UPDATE_SETTINGS } from '@/constants/chrome-api';
 import { NAI_URL } from '@/constants/nai';
-import { ElForm, ElFormItem, ElSwitch } from 'element-plus';
-import { ref, onMounted } from 'vue';
+import { defaultExtensionSettings } from '@/utils';
 
-const currentSettings = ref<ExtensionSettings>({
-    disableEnterKeyGeneration: false,
-    hideModelSelector: false,
-    enableDeleteHistoryWithoutConfirm: false,
-    enableHistorySaveShortcut: false,
-    selectHistoryWithMouseWheel: false,
-    highlightViewedHistory: false,
-    shrinkPromptArea: false,
-});
+const currentSettings = ref<ExtensionSettings>(defaultExtensionSettings);
 
 onMounted(async () => {
     const storageSettings = await chrome.storage.local.get();
@@ -30,9 +23,13 @@ const saveSettings = async () => {
 </script>
 
 <template>
-    <ElForm label-position="left" label-width="250px">
+    <ElForm label-position="left" label-width="300px">
         <ElFormItem label="Enterキーによる生成を無効化する">
             <ElSwitch v-model="currentSettings.disableEnterKeyGeneration" @change="saveSettings" />
+        </ElFormItem>
+
+        <ElFormItem label="保存ファイル名を<日時-シード>にする">
+            <ElSwitch v-model="currentSettings.datetimeFilename" @change="saveSettings" />
         </ElFormItem>
 
         <ElFormItem label="モデル選択ボックスを非表示にする">

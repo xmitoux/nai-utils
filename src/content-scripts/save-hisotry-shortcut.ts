@@ -1,7 +1,10 @@
 import dayjs from 'dayjs';
 import { createClassName } from '@/utils';
 
-export const saveHistoryShortcut = () => {
+export const saveHistoryShortcut = ({
+    datetimeFilename,
+    enableHistorySaveShortcut,
+}: ExtensionSettings) => {
     let saveButtonIconClass = '';
 
     const proc = () => {
@@ -40,7 +43,10 @@ export const saveHistoryShortcut = () => {
 
         // ファイル名を日時にして保存するボタンをクローンして置き換え
         const saveButtonClone = saveButton.cloneNode(true) as HTMLButtonElement;
-        saveButtonClone.addEventListener('click', () => downloadImage());
+        saveButtonClone.addEventListener('click', () =>
+            // 設定で動作切り替え
+            datetimeFilename ? downloadDatetimeNamedImage() : saveButton!.click(),
+        );
         saveButton.style.display = 'none';
         saveButton.parentNode!.insertBefore(saveButtonClone, saveButton);
 
@@ -49,7 +55,7 @@ export const saveHistoryShortcut = () => {
             event.preventDefault();
             saveButtonClone.click();
         };
-        thumbnailContainer.addEventListener('contextmenu', onSave);
+        enableHistorySaveShortcut && thumbnailContainer.addEventListener('contextmenu', onSave);
         thumbnailContainer.dataset.contextmenuListenerAdded = 'true';
     };
 
@@ -57,7 +63,7 @@ export const saveHistoryShortcut = () => {
     new MutationObserver(proc).observe(document.body, { childList: true, subtree: true });
 };
 
-const downloadImage = async () => {
+const downloadDatetimeNamedImage = async () => {
     const imageElement = document.querySelector<HTMLImageElement>('img')!;
 
     // Blob URLからBlobを取得
