@@ -1,4 +1,4 @@
-export const disableEnterGeneration = () => {
+export const generationScripts = () => {
     const handleKeyDown = (event: KeyboardEvent) => {
         if (!event.target) {
             return;

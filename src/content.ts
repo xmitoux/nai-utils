@@ -1,6 +1,6 @@
 import { watchHistoryScripts } from './content-scripts/watch-history-scripts';
 import { deleteHistoryWithoutConfirm } from './content-scripts/delete-history-without-confirm';
-import { disableEnterGeneration } from './content-scripts/disable-enter-generation';
+import { generationScripts } from './content-scripts/generationScripts';
 import { saveImageScripts } from './content-scripts/saveImageScripts';
 import { noModelSelector } from './content-scripts/no-model-selector';
 import { shrinkPromptArea } from './content-scripts/shrink-prompt-area';
@@ -16,7 +16,7 @@ chrome.runtime.sendMessage({ action: ACTION_GET_SETTINGS }, (response) => {
     const extensionSettings = response.settings as ExtensionSettings;
 
     if (extensionSettings.disableEnterKeyGeneration) {
-        disableEnterGeneration();
+        generationScripts();
     }
 
     if (extensionSettings.hideModelSelector) {
