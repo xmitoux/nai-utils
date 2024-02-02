@@ -8,6 +8,7 @@ export const defaultExtensionSettings: ExtensionSettings = {
     selectHistoryWithMouseWheel: false,
     highlightViewedHistory: false,
     shrinkPromptArea: false,
+    confirmDialog: false,
 };
 
 /**

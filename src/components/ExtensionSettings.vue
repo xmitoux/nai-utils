@@ -62,6 +62,10 @@ const saveSettings = async () => {
             <ElSwitch v-model="currentSettings.highlightViewedHistory" @change="saveSettings" />
         </ElFormItem>
 
+        <ElFormItem label="Anlas消費時の確認ダイアログを表示する">
+            <ElSwitch v-model="currentSettings.confirmDialog" @change="saveSettings" />
+        </ElFormItem>
+
         <ElFormItem label="プロンプト欄を縮小する">
             <ElSwitch v-model="currentSettings.shrinkPromptArea" @change="saveSettings" />
         </ElFormItem>

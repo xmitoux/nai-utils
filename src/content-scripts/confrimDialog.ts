@@ -6,7 +6,7 @@ import {
 } from '@/content-scripts/setupContents';
 import { addEventListener } from '@/utils';
 
-export const confirmDialog = () => {
+export const confirmDialog = ({ confirmDialog }: ExtensionSettings) => {
     const proc = () => {
         if (generateButton) {
             addEventListener(generateButton, 'click', 'confirmAdded', onClick);
@@ -27,7 +27,8 @@ export const confirmDialog = () => {
         }
     };
 
-    new MutationObserver(proc).observe(document.body, { childList: true, subtree: true });
+    confirmDialog &&
+        new MutationObserver(proc).observe(document.body, { childList: true, subtree: true });
 };
 
 const onClick = (event: Event) => {

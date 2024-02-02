@@ -8,4 +8,5 @@ type ExtensionSettings = {
     shrinkPromptArea: boolean;
     selectHistoryWithMouseWheel: boolean;
     highlightViewedHistory: boolean;
+    confirmDialog: boolean;
 };
