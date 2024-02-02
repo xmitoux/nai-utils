@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import { createClassName } from '@/utils';
 import { saveButton } from '@/content-scripts/setupContent';
 
-export const watchHistoryScripts = (extensionSettings: ExtensionSettings) => {
+export const historyScripts = (extensionSettings: ExtensionSettings) => {
     let overlayParentClass = '';
     let overlay: HTMLDivElement | null = null;
 

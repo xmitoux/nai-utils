@@ -1,4 +1,4 @@
-import { watchHistoryScripts } from './content-scripts/watch-history-scripts';
+import { historyScripts } from './content-scripts/historyScripts';
 import { deleteHistoryWithoutConfirm } from './content-scripts/delete-history-without-confirm';
 import { generationScripts } from './content-scripts/generationScripts';
 import { noModelSelector } from './content-scripts/no-model-selector';
@@ -17,7 +17,7 @@ chrome.runtime.sendMessage({ action: ACTION_GET_SETTINGS }, (response) => {
 
     setupContent();
     generationScripts(extensionSettings);
-    watchHistoryScripts(extensionSettings);
+    historyScripts(extensionSettings);
 
     if (extensionSettings.hideModelSelector) {
         noModelSelector();
