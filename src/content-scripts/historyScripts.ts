@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import { createClassName } from '@/utils';
 import { saveButton } from '@/content-scripts/setupContents';
+import { BUTTON_TEXT_SEED_EN, BUTTON_TEXT_SEED_JA } from '@/constants/nai';
 
 export const historyScripts = (extensionSettings: ExtensionSettings) => {
     let overlayParentClass = '';
@@ -225,7 +226,8 @@ const downloadDatetimeNamedImage = async () => {
 
         // シードコピーボタンの直前にあるシード値span要素を探してシードを取得
         for (const span of spans) {
-            if (span.textContent?.trim() === 'Copy to Seed') {
+            const spanText = span.textContent?.trim();
+            if (spanText === BUTTON_TEXT_SEED_EN || spanText === BUTTON_TEXT_SEED_JA) {
                 const previousElement = span.previousElementSibling as HTMLSpanElement;
                 return previousElement?.textContent?.trim() ?? null;
             }
