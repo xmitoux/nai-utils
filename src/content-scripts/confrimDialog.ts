@@ -1,4 +1,9 @@
-import { BUTTON_TEXT_GENERATE_EN, BUTTON_TEXT_GENERATE_JA } from '@/constants/nai';
+import {
+    BUTTON_TEXT_GENERATE_EN,
+    BUTTON_TEXT_GENERATE_JA,
+    BUTTON_TEXT_UPSCALE_EN,
+    BUTTON_TEXT_UPSCALE_JA,
+} from '@/constants/nai';
 
 export const confirmDialog = () => {
     const proc = () => {
@@ -8,11 +13,13 @@ export const confirmDialog = () => {
         for (const button of buttons) {
             const buttonText = button.textContent;
             if (
-                buttonText!.includes(BUTTON_TEXT_GENERATE_EN) ||
-                buttonText!.includes(BUTTON_TEXT_GENERATE_JA)
+                buttonText?.includes(BUTTON_TEXT_GENERATE_EN) ||
+                buttonText?.includes(BUTTON_TEXT_GENERATE_JA) ||
+                buttonText?.includes(BUTTON_TEXT_UPSCALE_EN) ||
+                buttonText?.includes(BUTTON_TEXT_UPSCALE_JA)
             ) {
                 if (!button.dataset.confirmAdded) {
-                    button.onclick = onClick;
+                    button.addEventListener('click', onClick);
                     button.dataset.confirmAdded = 'true';
                 }
             }
@@ -23,7 +30,8 @@ export const confirmDialog = () => {
 };
 
 const onClick = (event: Event) => {
-    const target = event.target as HTMLElement;
+    // イベントからボタンを取得(子要素をclickしたときもcurrentTargetにはbuttonが入っている)
+    const target = event.currentTarget as HTMLElement;
 
     // 消費Anlas部分のspanを取得
     const spans = target.querySelectorAll('span');
