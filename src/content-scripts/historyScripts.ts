@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import { createClassName } from '@/utils';
-import { saveButton } from '@/content-scripts/setupContent';
+import { saveButton } from '@/content-scripts/setupContents';
 
 export const historyScripts = (extensionSettings: ExtensionSettings) => {
     let overlayParentClass = '';

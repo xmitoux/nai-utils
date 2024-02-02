@@ -10,7 +10,7 @@ export let saveButton: HTMLButtonElement | undefined;
 export let variationButton: HTMLButtonElement | undefined;
 export let upscaleButton: HTMLButtonElement | undefined;
 
-export const setupContent = () => {
+export const setupContents = () => {
     let saveButtonIconClass: string | undefined;
     let variationButtonIconClass: string | undefined;
     let upscaleButtonIconClass: string | undefined;

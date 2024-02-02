@@ -5,7 +5,7 @@ import { noModelSelector } from './content-scripts/no-model-selector';
 import { shrinkPromptArea } from './content-scripts/shrink-prompt-area';
 
 import { ACTION_GET_SETTINGS } from '@/constants/chrome-api';
-import { setupContent } from './content-scripts/setupContent';
+import { setupContents } from './content-scripts/setupContents';
 import { confirmDialog } from './content-scripts/confrimDialog';
 
 // ページ読み込み時に設定を取得する
@@ -16,7 +16,7 @@ chrome.runtime.sendMessage({ action: ACTION_GET_SETTINGS }, (response) => {
 
     const extensionSettings = response.settings as ExtensionSettings;
 
-    setupContent();
+    setupContents();
     generationScripts(extensionSettings);
     historyScripts(extensionSettings);
     confirmDialog();

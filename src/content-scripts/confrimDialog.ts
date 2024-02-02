@@ -4,7 +4,7 @@ import {
     BUTTON_TEXT_UPSCALE_EN,
     BUTTON_TEXT_UPSCALE_JA,
 } from '@/constants/nai';
-import { upscaleButton, variationButton } from '@/content-scripts/setupContent';
+import { upscaleButton, variationButton } from '@/content-scripts/setupContents';
 import { addEventListener } from '@/utils';
 
 export const confirmDialog = () => {
