@@ -8,6 +8,7 @@ export const defaultExtensionSettings: ExtensionSettings = {
     selectHistoryWithMouseWheel: false,
     highlightViewedHistory: false,
     shrinkPromptArea: false,
+    confirmDialog: false,
 };
 
 /**
@@ -20,14 +21,14 @@ export const createClassName = (className: string): string => {
         .join('');
 };
 
-export const addEventListener = (
+export const addEventListener = <T extends Event>(
     element: HTMLElement,
     event: keyof HTMLElementEventMap,
     flagName: string,
-    listener: (event: Event) => void,
+    listener: (event: T) => void,
 ) => {
     if (element && !element.dataset[flagName]) {
-        element.addEventListener(event, listener);
+        element.addEventListener(event, (e) => listener(e as T));
         element.dataset[flagName] = 'true';
     }
 };

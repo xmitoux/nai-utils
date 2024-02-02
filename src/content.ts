@@ -19,7 +19,7 @@ chrome.runtime.sendMessage({ action: ACTION_GET_SETTINGS }, (response) => {
     setupContents();
     generationScripts(extensionSettings);
     historyScripts(extensionSettings);
-    confirmDialog();
+    confirmDialog(extensionSettings);
 
     if (extensionSettings.hideModelSelector) {
         noModelSelector();
