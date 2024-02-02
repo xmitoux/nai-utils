@@ -4,12 +4,14 @@ import {
     BUTTON_TEXT_UPSCALE_EN,
     BUTTON_TEXT_UPSCALE_JA,
 } from '@/constants/nai';
+import { upscaleButton, variationButton } from '@/content-scripts/setupContent';
+import { addEventListener } from '@/utils';
 
 export const confirmDialog = () => {
     const proc = () => {
         const buttons = document.querySelectorAll<HTMLButtonElement>('button');
 
-        // 生成ボタンをテキストで探す
+        // 生成ボタンとi2iのupscaleボタンをテキストで探す
         for (const button of buttons) {
             const buttonText = button.textContent;
             if (
@@ -18,11 +20,18 @@ export const confirmDialog = () => {
                 buttonText?.includes(BUTTON_TEXT_UPSCALE_EN) ||
                 buttonText?.includes(BUTTON_TEXT_UPSCALE_JA)
             ) {
-                if (!button.dataset.confirmAdded) {
-                    button.addEventListener('click', onClick);
-                    button.dataset.confirmAdded = 'true';
-                }
+                addEventListener(button, 'click', 'confirmAdded', onClick);
             }
+        }
+
+        // バリエーションボタン
+        if (variationButton) {
+            addEventListener(variationButton, 'click', 'confirmAdded', onClick);
+        }
+
+        // upscaleボタン
+        if (upscaleButton) {
+            addEventListener(upscaleButton, 'click', 'confirmAdded', onClick);
         }
     };
 

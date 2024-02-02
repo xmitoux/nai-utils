@@ -19,3 +19,15 @@ export const createClassName = (className: string): string => {
         .map((className) => '.' + className)
         .join('');
 };
+
+export const addEventListener = (
+    element: HTMLElement,
+    event: keyof HTMLElementEventMap,
+    flagName: string,
+    listener: (event: Event) => void,
+) => {
+    if (element && !element.dataset[flagName]) {
+        element.addEventListener(event, listener);
+        element.dataset[flagName] = 'true';
+    }
+};

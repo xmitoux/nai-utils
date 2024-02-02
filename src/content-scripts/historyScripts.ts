@@ -101,23 +101,23 @@ export const historyScripts = (extensionSettings: ExtensionSettings) => {
             // サムネ保存イベント
             const saveThumbnail = () => {
                 downloadDatetimeNamedImage();
-                saveButton.style.opacity = '0.4';
+                saveButton!.style.opacity = '0.4';
                 thumbnails[selectedIndex].dataset.saved = 'true';
             };
             const onSave = (event: Event) => {
                 saveThumbnail();
                 event.stopPropagation();
             };
-            if (extensionSettings.datetimeFilename && !saveButton.dataset.saveOverrided) {
+            if (extensionSettings.datetimeFilename && !saveButton!.dataset.saveOverrided) {
                 // clickイベントリスナが未登録なら登録
-                saveButton.addEventListener('click', onSave);
-                saveButton.dataset.saveOverrided = 'true';
+                saveButton!.addEventListener('click', onSave);
+                saveButton!.dataset.saveOverrided = 'true';
             }
 
             // 履歴エリアに右クリック保存イベントを追加
             const onContextmenu = (event: Event) => {
                 event.preventDefault();
-                extensionSettings.datetimeFilename ? saveThumbnail() : saveButton.click();
+                extensionSettings.datetimeFilename ? saveThumbnail() : saveButton!.click();
             };
             if (
                 extensionSettings.enableHistorySaveShortcut &&
@@ -145,9 +145,9 @@ export const historyScripts = (extensionSettings: ExtensionSettings) => {
 
                 if (thumbnail.dataset.saved) {
                     // 保存済み画像のとき保存ボタンを灰色にする
-                    saveButton.style.opacity = '0.4';
+                    saveButton!.style.opacity = '0.4';
                 } else {
-                    saveButton.style.opacity = '';
+                    saveButton!.style.opacity = '';
                 }
             };
 
@@ -190,7 +190,7 @@ export const historyScripts = (extensionSettings: ExtensionSettings) => {
                 // 新規生成時はオーバーレイを消す
                 overlay.style.display = 'none';
                 // 保存ボタンの色をデフォルトに戻す
-                saveButton.style.opacity = '';
+                saveButton!.style.opacity = '';
             }
         };
 
