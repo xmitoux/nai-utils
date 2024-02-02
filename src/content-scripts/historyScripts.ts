@@ -78,6 +78,11 @@ export const historyScripts = (extensionSettings: ExtensionSettings) => {
 
             // サムネwheelイベント
             const onWheel = (event: WheelEvent) => {
+                if (event.altKey) {
+                    // Altキーが押されている場合はスクロール
+                    return;
+                }
+
                 const selectThumbnail = (index: number) => {
                     if (index >= 0 && index < thumbnails.length) {
                         thumbnails[index].click();
