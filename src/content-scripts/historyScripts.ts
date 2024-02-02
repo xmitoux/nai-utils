@@ -1,6 +1,8 @@
+import dayjs from 'dayjs';
 import { createClassName } from '@/utils';
+import { saveButton } from '@/content-scripts/setupContent';
 
-export const watchHistoryScripts = (extensionSettings: ExtensionSettings) => {
+export const historyScripts = (extensionSettings: ExtensionSettings) => {
     let overlayParentClass = '';
     let overlay: HTMLDivElement | null = null;
 
@@ -73,6 +75,7 @@ export const watchHistoryScripts = (extensionSettings: ExtensionSettings) => {
         const historyObserve: MutationCallback = () => {
             thumbnails = hisotryContainer.querySelectorAll<HTMLDivElement>('div[role="button"]');
 
+            // サムネwheelイベント
             const onWheel = (event: WheelEvent) => {
                 const selectThumbnail = (index: number) => {
                     if (index >= 0 && index < thumbnails.length) {
@@ -95,6 +98,35 @@ export const watchHistoryScripts = (extensionSettings: ExtensionSettings) => {
                 hisotryContainer.dataset.wheelEventListenerAdded = 'true';
             }
 
+            // サムネ保存イベント
+            const saveThumbnail = () => {
+                downloadDatetimeNamedImage();
+                saveButton.style.opacity = '0.4';
+                thumbnails[selectedIndex].dataset.saved = 'true';
+            };
+            const onSave = (event: Event) => {
+                saveThumbnail();
+                event.stopPropagation();
+            };
+            if (extensionSettings.datetimeFilename && !saveButton.dataset.saveOverrided) {
+                // clickイベントリスナが未登録なら登録
+                saveButton.addEventListener('click', onSave);
+                saveButton.dataset.saveOverrided = 'true';
+            }
+
+            // 履歴エリアに右クリック保存イベントを追加
+            const onContextmenu = (event: Event) => {
+                event.preventDefault();
+                extensionSettings.datetimeFilename ? saveThumbnail() : saveButton.click();
+            };
+            if (
+                extensionSettings.enableHistorySaveShortcut &&
+                !hisotryContainer.dataset.contextmenuListenerAdded
+            ) {
+                hisotryContainer.addEventListener('contextmenu', onContextmenu);
+                hisotryContainer.dataset.contextmenuListenerAdded = 'true';
+            }
+
             // サムネclickイベント
             const onThumbnailClick = (thumbnail: HTMLDivElement, index: number) => {
                 // ホイール選択とインデックスを一致させる
@@ -110,12 +142,28 @@ export const watchHistoryScripts = (extensionSettings: ExtensionSettings) => {
                     // 視聴済みフラグを登録
                     thumbnail.dataset.watched = 'true';
                 }
+
+                if (thumbnail.dataset.saved) {
+                    // 保存済み画像のとき保存ボタンを灰色にする
+                    saveButton.style.opacity = '0.4';
+                } else {
+                    saveButton.style.opacity = '';
+                }
             };
 
             // 視聴済みフラグの作業用リストを作成
             // (生成後にdiv要素が子要素の最後に追加されるが、実際の画像は一番上に来るのでフラグをそれに合わせる)
-            const watchedWorkList = [...thumbnails].map((thumbnail) => thumbnail.dataset.watched);
-            watchedWorkList.unshift(watchedWorkList.pop());
+            type ThumbnailFlag = {
+                watched: boolean;
+                saved: boolean;
+            };
+            const thumbnailFlagWorkList: ThumbnailFlag[] = [...thumbnails].map((thumbnail) => {
+                return {
+                    watched: !!thumbnail.dataset.watched,
+                    saved: !!thumbnail.dataset.saved,
+                };
+            });
+            thumbnailFlagWorkList.unshift(thumbnailFlagWorkList.pop()!);
 
             thumbnails.forEach((thumbnail, index) => {
                 if (!thumbnail.dataset.clickEventListenerAdded) {
@@ -123,18 +171,26 @@ export const watchHistoryScripts = (extensionSettings: ExtensionSettings) => {
                     thumbnail.dataset.clickEventListenerAdded = 'true';
                 }
 
-                // 視聴済みフラグを更新する
-                if (watchedWorkList[index]) {
-                    thumbnail.dataset.watched = 'ture';
+                // サムネイルフラグを更新する
+                const thumbnailFlag = thumbnailFlagWorkList[index];
+                if (thumbnailFlag.watched) {
+                    thumbnail.dataset.watched = 'true';
                 } else {
-                    // delete演算子で削除(undefinedを入れると文字列'undefined'になる)
+                    // delete演算子で削除(undefinedを入れると文字列'undefined'になるので注意)
                     delete thumbnail.dataset.watched;
+                }
+                if (thumbnailFlag.saved) {
+                    thumbnail.dataset.saved = 'true';
+                } else {
+                    delete thumbnail.dataset.saved;
                 }
             });
 
-            // 新規生成時はオーバーレイを消す
             if (overlay) {
+                // 新規生成時はオーバーレイを消す
                 overlay.style.display = 'none';
+                // 保存ボタンの色をデフォルトに戻す
+                saveButton.style.opacity = '';
             }
         };
 
@@ -148,4 +204,39 @@ export const watchHistoryScripts = (extensionSettings: ExtensionSettings) => {
         childList: true,
         subtree: true,
     });
+};
+
+const downloadDatetimeNamedImage = async () => {
+    const imageElement = document.querySelector<HTMLImageElement>('img')!;
+
+    // Blob URLからBlobを取得
+    const response = await fetch(imageElement.src);
+    const blob = await response.blob();
+
+    // Blobからダウンロード用のURLを作成
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+
+    const now = dayjs().format('YYYYMMDDHHmmss');
+
+    const getSeed = (): string | null => {
+        const spans = document.querySelectorAll('span');
+
+        // シードコピーボタンの直前にあるシード値span要素を探してシードを取得
+        for (const span of spans) {
+            if (span.textContent?.trim() === 'Copy to Seed') {
+                const previousElement = span.previousElementSibling as HTMLSpanElement;
+                return previousElement?.textContent?.trim() ?? null;
+            }
+        }
+        return null;
+    };
+
+    const seed = getSeed() || '';
+    const fileName = `${now}-${seed}.png`;
+    link.download = fileName;
+
+    link.click();
+    URL.revokeObjectURL(url);
 };
