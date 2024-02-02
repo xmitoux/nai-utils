@@ -22,10 +22,10 @@ export const setupContents = () => {
     let upscaleButtonIconClass: string | undefined;
 
     const proc = () => {
-        // 生成ボタンとi2iのupscaleボタンをテキストで探す
         const setupTextButton = () => {
             const buttons = document.querySelectorAll<HTMLButtonElement>('button');
 
+            // 生成ボタンのupscaleボタンをテキストで探す
             for (const button of buttons) {
                 const buttonText = button.textContent;
                 if (
@@ -33,11 +33,21 @@ export const setupContents = () => {
                     buttonText?.includes(BUTTON_TEXT_GENERATE_JA)
                 ) {
                     generateButton = button;
-                } else if (
+                    // 最初の1個だけを取得
+                    break;
+                }
+            }
+
+            // i2iのupscaleボタンをテキストで探す
+            for (const button of buttons) {
+                const buttonText = button.textContent;
+                if (
                     buttonText?.includes(BUTTON_TEXT_UPSCALE_EN) ||
                     buttonText?.includes(BUTTON_TEXT_UPSCALE_JA)
                 ) {
                     upscaleButtonText = button;
+                    // 最初の1個だけを取得
+                    break;
                 }
             }
         };
