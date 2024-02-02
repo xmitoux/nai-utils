@@ -1,39 +1,11 @@
 import dayjs from 'dayjs';
-import { createClassName } from '@/utils';
+import { saveButton } from '@/content-scripts/setupContent';
 
 export const saveImageScripts = ({
     datetimeFilename,
     enableHistorySaveShortcut,
 }: ExtensionSettings) => {
-    let saveButtonIconClass = '';
-
     const proc = () => {
-        let saveButton: HTMLButtonElement | null = null;
-
-        // 保存ボタンの親または子要素を取得
-        // (ページ表示後最初の1回は親(projection-idで特定)、以降(i2iで再描画時)は保持したclass名で子要素を取得)
-        if (!saveButtonIconClass) {
-            const parentDiv = document.querySelector<HTMLDivElement>(
-                'div[data-projection-id="10"]',
-            );
-            if (!parentDiv) {
-                return;
-            }
-
-            saveButton = parentDiv.querySelector('button') as HTMLButtonElement;
-            // ボタン特定用に子要素のclass名を保持
-            saveButtonIconClass = createClassName(saveButton.querySelector('div')!.className);
-        } else {
-            // ボタンの子要素(フロッピーアイコン)を取得
-            const saveButtonIconDiv = document.querySelector<HTMLDivElement>(saveButtonIconClass);
-            if (!saveButtonIconDiv) {
-                return;
-            }
-
-            // 親であるボタンを取得
-            saveButton = saveButtonIconDiv.parentNode as HTMLButtonElement;
-        }
-
         const thumbnailContainer = document.getElementById('historyContainer')!;
 
         // 既にイベントリスナが追加されていないか確認
@@ -41,19 +13,19 @@ export const saveImageScripts = ({
             return;
         }
 
-        // ファイル名を日時にして保存するボタンをクローンして置き換え
-        const saveButtonClone = saveButton.cloneNode(true) as HTMLButtonElement;
-        saveButtonClone.addEventListener('click', () =>
-            // 設定で動作切り替え
-            datetimeFilename ? downloadDatetimeNamedImage() : saveButton!.click(),
-        );
-        saveButton.style.display = 'none';
-        saveButton.parentNode!.insertBefore(saveButtonClone, saveButton);
+        // 設定で動作切り替え
+        if (datetimeFilename) {
+            saveButton.addEventListener('click', (event: Event) => {
+                downloadDatetimeNamedImage();
+                saveButton!.style.opacity = '0.4';
+                event.stopPropagation();
+            });
+        }
 
         // 履歴エリアに右クリック保存イベントを追加
         const onSave = (event: MouseEvent) => {
             event.preventDefault();
-            saveButtonClone.click();
+            saveButton!.click();
         };
         enableHistorySaveShortcut && thumbnailContainer.addEventListener('contextmenu', onSave);
         thumbnailContainer.dataset.contextmenuListenerAdded = 'true';
