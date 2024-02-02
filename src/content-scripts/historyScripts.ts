@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { createClassName } from '@/utils';
+import { addEventListener, createClassName } from '@/utils';
 import { saveButton } from '@/content-scripts/setupContents';
 import { BUTTON_TEXT_SEED_EN, BUTTON_TEXT_SEED_JA } from '@/constants/nai';
 
@@ -90,13 +90,8 @@ export const historyScripts = (extensionSettings: ExtensionSettings) => {
                 selectThumbnail(selectedIndex + direction);
             };
 
-            if (
-                extensionSettings.selectHistoryWithMouseWheel &&
-                !hisotryContainer.dataset.wheelEventListenerAdded
-            ) {
-                // wheelイベントリスナが未登録なら登録
-                hisotryContainer.addEventListener('wheel', onWheel);
-                hisotryContainer.dataset.wheelEventListenerAdded = 'true';
+            if (extensionSettings.selectHistoryWithMouseWheel) {
+                addEventListener(hisotryContainer, 'wheel', 'wheelEventListenerAdded', onWheel);
             }
 
             // サムネ保存イベント
@@ -109,10 +104,8 @@ export const historyScripts = (extensionSettings: ExtensionSettings) => {
                 saveThumbnail();
                 event.stopPropagation();
             };
-            if (extensionSettings.datetimeFilename && !saveButton!.dataset.saveOverrided) {
-                // clickイベントリスナが未登録なら登録
-                saveButton!.addEventListener('click', onSave);
-                saveButton!.dataset.saveOverrided = 'true';
+            if (extensionSettings.datetimeFilename) {
+                addEventListener(saveButton!, 'click', 'saveOverrided', onSave);
             }
 
             // 履歴エリアに右クリック保存イベントを追加
@@ -120,12 +113,13 @@ export const historyScripts = (extensionSettings: ExtensionSettings) => {
                 event.preventDefault();
                 extensionSettings.datetimeFilename ? saveThumbnail() : saveButton!.click();
             };
-            if (
-                extensionSettings.enableHistorySaveShortcut &&
-                !hisotryContainer.dataset.contextmenuListenerAdded
-            ) {
-                hisotryContainer.addEventListener('contextmenu', onContextmenu);
-                hisotryContainer.dataset.contextmenuListenerAdded = 'true';
+            if (extensionSettings.enableHistorySaveShortcut) {
+                addEventListener(
+                    hisotryContainer,
+                    'contextmenu',
+                    'contextmenuListenerAdded',
+                    onContextmenu,
+                );
             }
 
             // サムネclickイベント
@@ -167,10 +161,9 @@ export const historyScripts = (extensionSettings: ExtensionSettings) => {
             thumbnailFlagWorkList.unshift(thumbnailFlagWorkList.pop()!);
 
             thumbnails.forEach((thumbnail, index) => {
-                if (!thumbnail.dataset.clickEventListenerAdded) {
-                    thumbnail.addEventListener('click', () => onThumbnailClick(thumbnail, index));
-                    thumbnail.dataset.clickEventListenerAdded = 'true';
-                }
+                addEventListener(thumbnail, 'click', 'clickEventListenerAdded', () =>
+                    onThumbnailClick(thumbnail, index),
+                );
 
                 // サムネイルフラグを更新する
                 const thumbnailFlag = thumbnailFlagWorkList[index];
