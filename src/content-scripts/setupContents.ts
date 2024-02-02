@@ -1,4 +1,8 @@
 import {
+    BUTTON_TEXT_GENERATE_EN,
+    BUTTON_TEXT_GENERATE_JA,
+    BUTTON_TEXT_UPSCALE_EN,
+    BUTTON_TEXT_UPSCALE_JA,
     ID_ATTRIBUTE,
     PROJECTION_ID_SAVE,
     PROJECTION_ID_UPSCALE,
@@ -6,6 +10,8 @@ import {
 } from '@/constants/nai';
 import { createClassName } from '@/utils';
 
+export let generateButton: HTMLButtonElement | undefined;
+export let upscaleButtonText: HTMLButtonElement | undefined;
 export let saveButton: HTMLButtonElement | undefined;
 export let variationButton: HTMLButtonElement | undefined;
 export let upscaleButton: HTMLButtonElement | undefined;
@@ -16,6 +22,29 @@ export const setupContents = () => {
     let upscaleButtonIconClass: string | undefined;
 
     const proc = () => {
+        // 生成ボタンとi2iのupscaleボタンをテキストで探す
+        const setupTextButton = () => {
+            const buttons = document.querySelectorAll<HTMLButtonElement>('button');
+
+            for (const button of buttons) {
+                const buttonText = button.textContent;
+                if (
+                    buttonText?.includes(BUTTON_TEXT_GENERATE_EN) ||
+                    buttonText?.includes(BUTTON_TEXT_GENERATE_JA)
+                ) {
+                    generateButton = button;
+                    break;
+                } else if (
+                    buttonText?.includes(BUTTON_TEXT_UPSCALE_EN) ||
+                    buttonText?.includes(BUTTON_TEXT_UPSCALE_JA)
+                ) {
+                    upscaleButtonText = button;
+                    break;
+                }
+            }
+        };
+        setupTextButton();
+
         const setupSaveButton = () => {
             [saveButton, saveButtonIconClass] = setupIconButton(
                 PROJECTION_ID_SAVE,
