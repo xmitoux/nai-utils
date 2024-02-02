@@ -4,3 +4,6 @@ export const BUTTON_TEXT_GENERATE_EN = 'Generate';
 export const BUTTON_TEXT_GENERATE_JA = '生成';
 export const BUTTON_TEXT_UPSCALE_EN = 'Upscale';
 export const BUTTON_TEXT_UPSCALE_JA = '拡大';
+export const PROJECTION_ID_VARIATION = 2;
+export const PROJECTION_ID_UPSCALE = 3;
+export const PROJECTION_ID_SAVE = 10;
