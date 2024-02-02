@@ -33,13 +33,11 @@ export const setupContents = () => {
                     buttonText?.includes(BUTTON_TEXT_GENERATE_JA)
                 ) {
                     generateButton = button;
-                    break;
                 } else if (
                     buttonText?.includes(BUTTON_TEXT_UPSCALE_EN) ||
                     buttonText?.includes(BUTTON_TEXT_UPSCALE_JA)
                 ) {
                     upscaleButtonText = button;
-                    break;
                 }
             }
         };

@@ -1,3 +1,5 @@
+import { generateButton } from '@/content-scripts/setupContents';
+
 export const generationScripts = ({
     disableEnterKeyGeneration,
     generateEverywhere,
@@ -24,9 +26,6 @@ export const generationScripts = ({
         // ページ内のどこでも Ctrl * Enter で生成
         if (generateEverywhere) {
             if ((event.ctrlKey || event.metaKey) && event.key == 'Enter') {
-                const generateButton = document.querySelector<HTMLButtonElement>(
-                    'button:has(span):has(div)',
-                );
                 generateButton?.click();
                 return;
             }
