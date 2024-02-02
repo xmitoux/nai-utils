@@ -7,3 +7,5 @@ export const BUTTON_TEXT_UPSCALE_JA = '拡大';
 export const PROJECTION_ID_VARIATION = 2;
 export const PROJECTION_ID_UPSCALE = 3;
 export const PROJECTION_ID_SAVE = 10;
+export const BUTTON_TEXT_SEED_EN = 'Copy to Seed';
+export const BUTTON_TEXT_SEED_JA = 'シード値をコピー';
