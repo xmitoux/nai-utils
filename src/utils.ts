@@ -9,6 +9,7 @@ export const defaultExtensionSettings: ExtensionSettings = {
     highlightViewedHistory: false,
     shrinkPromptArea: false,
     confirmDialog: false,
+    sliderButton: false,
 };
 
 /**
