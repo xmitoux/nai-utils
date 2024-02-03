@@ -36,6 +36,10 @@ const saveSettings = async () => {
             <ElSwitch v-model="currentSettings.datetimeFilename" @change="saveSettings" />
         </ElFormItem>
 
+        <ElFormItem label="一部のスライダーに +/- ボタンを表示する">
+            <ElSwitch v-model="currentSettings.sliderButton" @change="saveSettings" />
+        </ElFormItem>
+
         <ElFormItem label="モデル選択ボックスを非表示にする">
             <ElSwitch v-model="currentSettings.hideModelSelector" @change="saveSettings" />
         </ElFormItem>
