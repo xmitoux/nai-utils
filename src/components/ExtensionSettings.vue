@@ -56,10 +56,7 @@ const saveSettings = async () => {
         </ElFormItem>
 
         <ElFormItem label="生成履歴をマウスホイールで選択する">
-            <ElSwitch
-                v-model="currentSettings.selectHistoryWithMouseWheel"
-                @change="saveSettings"
-            />
+            <ElSwitch v-model="currentSettings.wheelHistory" @change="saveSettings" />
         </ElFormItem>
 
         <ElFormItem label="閲覧済みの生成履歴を強調する">

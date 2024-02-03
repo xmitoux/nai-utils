@@ -5,7 +5,7 @@ export const defaultExtensionSettings: ExtensionSettings = {
     hideModelSelector: false,
     enableDeleteHistoryWithoutConfirm: false,
     enableHistorySaveShortcut: false,
-    selectHistoryWithMouseWheel: false,
+    wheelHistory: false,
     highlightViewedHistory: false,
     shrinkPromptArea: false,
     confirmDialog: false,
@@ -22,7 +22,7 @@ export const createClassName = (className: string): string => {
         .join('');
 };
 
-export const addEventListener = <T extends Event>(
+export const addEvent = <T extends Event>(
     element: HTMLElement,
     event: keyof HTMLElementEventMap,
     flagName: string,
