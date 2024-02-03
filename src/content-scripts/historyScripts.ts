@@ -1,51 +1,9 @@
 import dayjs from 'dayjs';
 import { addEventListener } from '@/utils';
-import { saveButton } from '@/content-scripts/setupContents';
+import { saveButton, overlay } from '@/content-scripts/setupContents';
 import { BUTTON_TEXT_SEED_EN, BUTTON_TEXT_SEED_JA } from '@/constants/nai';
 
 export const historyScripts = (extensionSettings: ExtensionSettings) => {
-    let overlay: HTMLDivElement | null = null;
-
-    const overlayObserver = () => {
-        // 生成画像の親要素を取得
-        const imageGrandParent = document.querySelector('img')?.parentElement?.parentElement;
-        if (!imageGrandParent) {
-            return;
-        }
-
-        if (!imageGrandParent.dataset.overlayAdded) {
-            const createOverlay = () => {
-                const overlayTmp = document.createElement('div');
-                overlayTmp.style.display = 'none';
-                overlayTmp.style.position = 'absolute';
-                overlayTmp.style.top = '0';
-                overlayTmp.style.left = '0';
-                overlayTmp.style.right = '0';
-                overlayTmp.style.bottom = '0';
-                overlayTmp.style.background = 'rgba(128, 128, 128, 0.3)';
-                overlayTmp.style.zIndex = '10'; // ないとオーバーレイされない
-
-                return overlayTmp;
-            };
-
-            overlay = createOverlay();
-
-            // imgタグができる前に追加すると画面が止まる(謎)のでちょっと待つ
-            setTimeout(() => {
-                imageGrandParent.prepend(overlay!);
-            }, 100);
-
-            imageGrandParent.dataset.overlayAdded = 'true';
-        }
-    };
-
-    // inpaint等で画面が切り替わると各要素が再生成されるので変更を監視
-    extensionSettings.highlightViewedHistory &&
-        new MutationObserver(overlayObserver).observe(document.body, {
-            childList: true,
-            subtree: true,
-        });
-
     let selectedIndex = 0;
     let thumbnails: NodeListOf<HTMLDivElement>;
     let historyObserver: MutationObserver | null = null;

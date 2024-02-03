@@ -13,6 +13,7 @@ export let upscaleButtonText: HTMLButtonElement | undefined;
 export let saveButton: HTMLButtonElement | undefined;
 export let variationButton: HTMLButtonElement | undefined;
 export let upscaleButton: HTMLButtonElement | undefined;
+export let overlay: HTMLDivElement | undefined;
 
 export const setupContents = () => {
     const proc = () => {
@@ -47,20 +48,46 @@ export const setupContents = () => {
         };
         setupTextButtons();
 
-        const setupSaveButton = () => {
+        const setupIconButtons = () => {
             saveButton = setupIconButton(buttons, BUTTON_ICON_SAVE);
-        };
-        setupSaveButton();
-
-        const setupVariationButton = () => {
             variationButton = setupIconButton(buttons, BUTTON_ICON_VARIATIONS);
-        };
-        setupVariationButton();
-
-        const setupUpscaleButton = () => {
             upscaleButton = setupIconButton(buttons, BUTTON_ICON_UPSCALE);
         };
-        setupUpscaleButton();
+        setupIconButtons();
+
+        const setupViewedHighlightOverlay = () => {
+            // 生成画像の親要素を取得
+            const imageGrandParent = document.querySelector('img')?.parentElement?.parentElement;
+            if (!imageGrandParent) {
+                return;
+            }
+
+            if (!imageGrandParent.dataset.overlayAdded) {
+                const createOverlay = () => {
+                    const overlayTmp = document.createElement('div');
+                    overlayTmp.style.display = 'none';
+                    overlayTmp.style.position = 'absolute';
+                    overlayTmp.style.top = '0';
+                    overlayTmp.style.left = '0';
+                    overlayTmp.style.right = '0';
+                    overlayTmp.style.bottom = '0';
+                    overlayTmp.style.background = 'rgba(128, 128, 128, 0.3)';
+                    overlayTmp.style.zIndex = '10'; // ないとオーバーレイされない
+
+                    return overlayTmp;
+                };
+
+                overlay = createOverlay();
+
+                // imgタグができる前に追加すると画面が止まる(謎)のでちょっと待つ
+                setTimeout(() => {
+                    imageGrandParent.prepend(overlay!);
+                }, 100);
+
+                imageGrandParent.dataset.overlayAdded = 'true';
+            }
+        };
+        setupViewedHighlightOverlay();
     };
 
     // inpaint等で画面が切り替わるとイベントリスナが破壊されるので監視して登録
