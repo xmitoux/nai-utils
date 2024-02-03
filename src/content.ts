@@ -7,6 +7,7 @@ import { shrinkPromptArea } from './content-scripts/shrink-prompt-area';
 import { ACTION_GET_SETTINGS } from '@/constants/chrome-api';
 import { setupContents } from './content-scripts/setupContents';
 import { confirmDialog } from './content-scripts/confrimDialog';
+import { addSliderButton } from './content-scripts/addSliderButton';
 
 // ページ読み込み時に設定を取得する
 chrome.runtime.sendMessage({ action: ACTION_GET_SETTINGS }, (response) => {
@@ -20,6 +21,7 @@ chrome.runtime.sendMessage({ action: ACTION_GET_SETTINGS }, (response) => {
     generationScripts(extensionSettings);
     historyScripts(extensionSettings);
     confirmDialog(extensionSettings);
+    addSliderButton(extensionSettings);
 
     if (extensionSettings.hideModelSelector) {
         noModelSelector();

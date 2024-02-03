@@ -9,4 +9,5 @@ type ExtensionSettings = {
     selectHistoryWithMouseWheel: boolean;
     highlightViewedHistory: boolean;
     confirmDialog: boolean;
+    sliderButton: boolean;
 };
