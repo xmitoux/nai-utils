@@ -1,53 +1,41 @@
 import dayjs from 'dayjs';
-import { addEventListener, createClassName } from '@/utils';
+import { addEventListener } from '@/utils';
 import { saveButton } from '@/content-scripts/setupContents';
 import { BUTTON_TEXT_SEED_EN, BUTTON_TEXT_SEED_JA } from '@/constants/nai';
 
 export const historyScripts = (extensionSettings: ExtensionSettings) => {
-    let overlayParentClass = '';
     let overlay: HTMLDivElement | null = null;
 
     const overlayObserver = () => {
         // 生成画像の親要素を取得
-        // (ページ表示後最初の1回はprojection-id、以降(i2iで再描画時)は保持したclass名で特定)
-        const overlayParent = overlayParentClass
-            ? document.querySelector<HTMLDivElement>(overlayParentClass)
-            : document.querySelector<HTMLDivElement>('div[data-projection-id="7"]');
-        if (!overlayParent) {
+        const imageGrandParent = document.querySelector('img')?.parentElement?.parentElement;
+        if (!imageGrandParent) {
             return;
         }
 
-        // 親要素特定用にclass名を1回だけ保持
-        if (!overlayParentClass) {
-            // querySelector用に"."で結合
-            overlayParentClass = createClassName(overlayParent.className);
-        }
+        if (!imageGrandParent.dataset.overlayAdded) {
+            const createOverlay = () => {
+                const overlayTmp = document.createElement('div');
+                overlayTmp.style.display = 'none';
+                overlayTmp.style.position = 'absolute';
+                overlayTmp.style.top = '0';
+                overlayTmp.style.left = '0';
+                overlayTmp.style.right = '0';
+                overlayTmp.style.bottom = '0';
+                overlayTmp.style.background = 'rgba(128, 128, 128, 0.3)';
+                overlayTmp.style.zIndex = '10'; // ないとオーバーレイされない
 
-        const createOverlay = () => {
-            const overlayTmp = document.createElement('div');
-            overlayTmp.style.display = 'none';
-            overlayTmp.style.position = 'absolute';
-            overlayTmp.style.top = '0';
-            overlayTmp.style.left = '0';
-            overlayTmp.style.right = '0';
-            overlayTmp.style.bottom = '0';
-            overlayTmp.style.background = 'rgba(128, 128, 128, 0.3)';
-            overlayTmp.style.zIndex = '10'; // ないとオーバーレイされない
+                return overlayTmp;
+            };
 
-            return overlayTmp;
-        };
-
-        if (!overlayParent.dataset.overlayAdded) {
-            // オーバーレイがまだないなら追加
             overlay = createOverlay();
 
             // imgタグができる前に追加すると画面が止まる(謎)のでちょっと待つ
             setTimeout(() => {
-                // 親要素の最初の子(生成画像の上)にオーバーレイを追加
-                overlayParent.insertBefore(overlay!, overlayParent.firstChild);
+                imageGrandParent.prepend(overlay!);
             }, 100);
 
-            overlayParent.dataset.overlayAdded = 'true';
+            imageGrandParent.dataset.overlayAdded = 'true';
         }
     };
 
