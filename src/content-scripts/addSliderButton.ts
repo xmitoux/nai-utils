@@ -20,6 +20,15 @@ export const addSliderButton = ({ sliderButton }: ExtensionSettings) => {
 
             let buttonConfig: ButtonConfig;
             if (sliderName.includes('Pen Size')) {
+                if (
+                    [...document.querySelectorAll('span')].every(
+                        (span) => span.textContent !== 'Draw Mask',
+                    )
+                ) {
+                    // ペイント画面には表示しない
+                    return;
+                }
+
                 buttonConfig = { type: 'Pen Size', step: 1, min: 1 };
             } else {
                 buttonConfig = { type: 'Strength', step: 0.05, parentWidth: '40px' };
