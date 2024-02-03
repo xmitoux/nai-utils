@@ -42,6 +42,7 @@ export const addSliderButton = ({ sliderButton }: ExtensionSettings) => {
             const createButton = (sizeOperator: SizeOperator): HTMLButtonElement => {
                 const sizeButton = document.createElement('button');
                 sizeButton.textContent = sizeOperator;
+                sizeButton.style.width = '20px';
                 sizeButton.style.backgroundColor = 'transparent';
                 sizeButton.style.cursor = 'pointer';
 
