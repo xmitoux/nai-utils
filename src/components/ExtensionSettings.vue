@@ -67,7 +67,7 @@ const saveSettings = async () => {
             <ElSwitch v-model="currentSettings.confirmDialog" @change="saveSettings" />
         </ElFormItem>
 
-        <ElFormItem label="プロンプト欄を縮小する">
+        <ElFormItem label="プロンプト欄を固定する">
             <ElSwitch v-model="currentSettings.shrinkPromptArea" @change="saveSettings" />
         </ElFormItem>
     </ElForm>

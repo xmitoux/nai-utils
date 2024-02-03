@@ -2,7 +2,7 @@ import { historyScripts } from './content-scripts/historyScripts';
 import { deleteHistoryWithoutConfirm } from './content-scripts/delete-history-without-confirm';
 import { generationScripts } from './content-scripts/generationScripts';
 import { noModelSelector } from './content-scripts/no-model-selector';
-import { shrinkPromptArea } from './content-scripts/shrink-prompt-area';
+import { shrinkPromptArea } from './content-scripts/shrinkPromptArea';
 
 import { ACTION_GET_SETTINGS } from '@/constants/chrome-api';
 import { setupContents } from './content-scripts/setupContents';

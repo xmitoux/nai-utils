@@ -5,10 +5,10 @@ export const shrinkPromptArea = () => {
             return;
         }
 
-        promptTextareaList[0].style.height = '';
+        promptTextareaList[0].style.height = '200px';
 
         if (promptTextareaList[1]) {
-            promptTextareaList[1].style.height = '';
+            promptTextareaList[1].style.height = '200px';
         }
     };
 
