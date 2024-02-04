@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import { addEvent } from '@/utils';
-import { saveButton, overlay } from '@/content-scripts/setupContents';
+import { saveButton, overlay, generatedImage } from '@/content-scripts/setupContents';
 import { BUTTON_TEXT_SEED_EN, BUTTON_TEXT_SEED_JA } from '@/constants/nai';
 import audioFile from '/assets/generated-sound.mp3';
 
@@ -175,10 +175,8 @@ export const historyScripts = ({
 };
 
 const downloadDatetimeNamedImage = async () => {
-    const imageElement = document.querySelector<HTMLImageElement>('img')!;
-
     // Blob URLからBlobを取得
-    const response = await fetch(imageElement.src);
+    const response = await fetch(generatedImage!.src);
     const blob = await response.blob();
 
     // Blobからダウンロード用のURLを作成
