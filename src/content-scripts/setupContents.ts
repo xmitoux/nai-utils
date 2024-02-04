@@ -3,28 +3,23 @@ import {
     BUTTON_TEXT_GENERATE_JA,
     BUTTON_TEXT_UPSCALE_EN,
     BUTTON_TEXT_UPSCALE_JA,
-    ID_ATTRIBUTE,
-    PROJECTION_ID_SAVE,
-    PROJECTION_ID_UPSCALE,
-    PROJECTION_ID_VARIATION,
+    BUTTON_ICON_SAVE,
+    BUTTON_ICON_VARIATIONS,
+    BUTTON_ICON_UPSCALE,
 } from '@/constants/nai';
-import { createClassName } from '@/utils';
 
 export let generateButton: HTMLButtonElement | undefined;
 export let upscaleButtonText: HTMLButtonElement | undefined;
 export let saveButton: HTMLButtonElement | undefined;
 export let variationButton: HTMLButtonElement | undefined;
 export let upscaleButton: HTMLButtonElement | undefined;
+export let overlay: HTMLDivElement | undefined;
 
 export const setupContents = () => {
-    let saveButtonIconClass: string | undefined;
-    let variationButtonIconClass: string | undefined;
-    let upscaleButtonIconClass: string | undefined;
-
     const proc = () => {
-        const setupTextButton = () => {
-            const buttons = document.querySelectorAll<HTMLButtonElement>('button');
+        const buttons = [...document.querySelectorAll<HTMLButtonElement>('button')];
 
+        const setupTextButtons = () => {
             // 生成ボタンのupscaleボタンをテキストで探す
             for (const button of buttons) {
                 const buttonText = button.textContent;
@@ -51,31 +46,48 @@ export const setupContents = () => {
                 }
             }
         };
-        setupTextButton();
+        setupTextButtons();
 
-        const setupSaveButton = () => {
-            [saveButton, saveButtonIconClass] = setupIconButton(
-                PROJECTION_ID_SAVE,
-                saveButtonIconClass,
-            );
+        const setupIconButtons = () => {
+            saveButton = setupIconButton(buttons, BUTTON_ICON_SAVE);
+            variationButton = setupIconButton(buttons, BUTTON_ICON_VARIATIONS);
+            upscaleButton = setupIconButton(buttons, BUTTON_ICON_UPSCALE);
         };
-        setupSaveButton();
+        setupIconButtons();
 
-        const setupVariationButton = () => {
-            [variationButton, variationButtonIconClass] = setupIconButton(
-                PROJECTION_ID_VARIATION,
-                variationButtonIconClass,
-            );
-        };
-        setupVariationButton();
+        const setupViewedHighlightOverlay = () => {
+            // 生成画像の親要素を取得
+            const imageGrandParent = document.querySelector('img')?.parentElement?.parentElement;
+            if (!imageGrandParent) {
+                return;
+            }
 
-        const setupUpscaleButton = () => {
-            [upscaleButton, upscaleButtonIconClass] = setupIconButton(
-                PROJECTION_ID_UPSCALE,
-                upscaleButtonIconClass,
-            );
+            if (!imageGrandParent.dataset.overlayAdded) {
+                const createOverlay = () => {
+                    const overlayTmp = document.createElement('div');
+                    overlayTmp.style.display = 'none';
+                    overlayTmp.style.position = 'absolute';
+                    overlayTmp.style.top = '0';
+                    overlayTmp.style.left = '0';
+                    overlayTmp.style.right = '0';
+                    overlayTmp.style.bottom = '0';
+                    overlayTmp.style.background = 'rgba(128, 128, 128, 0.3)';
+                    overlayTmp.style.zIndex = '10'; // ないとオーバーレイされない
+
+                    return overlayTmp;
+                };
+
+                overlay = createOverlay();
+
+                // imgタグができる前に追加すると画面が止まる(謎)のでちょっと待つ
+                setTimeout(() => {
+                    imageGrandParent.prepend(overlay!);
+                }, 100);
+
+                imageGrandParent.dataset.overlayAdded = 'true';
+            }
         };
-        setupUpscaleButton();
+        setupViewedHighlightOverlay();
     };
 
     // inpaint等で画面が切り替わるとイベントリスナが破壊されるので監視して登録
@@ -83,31 +95,23 @@ export const setupContents = () => {
 };
 
 const setupIconButton = (
-    projectionId: number,
-    buttonIconClassName: string | undefined,
-): [button?: HTMLButtonElement, buttonClassName?: string] => {
-    // ボタンの親または子要素を取得
-    // (ページ表示後最初の1回は親(projection-idで特定)、以降(i2iで再描画時)は保持したclass名で子要素を取得)
-    if (!buttonIconClassName) {
-        const parentDiv = document.querySelector<HTMLDivElement>(
-            `div[${ID_ATTRIBUTE}="${projectionId}"]`,
-        );
-        if (!parentDiv) {
-            return [];
+    iconButtons: HTMLButtonElement[],
+    buttonIconName: string,
+): HTMLButtonElement => {
+    const targetButton = iconButtons.find((button) => {
+        if ([...button.children].some((child) => child.tagName === 'SPAN')) {
+            // ボタン直下にspanを含む場合(テキストボタン)はスルー
+            // (upscaleのアイコンがi2i欄と被っているため)
+            return false;
         }
 
-        const button = parentDiv.querySelector<HTMLButtonElement>('button')!;
-        // ボタン特定用に子要素(アイコン)のclass名を保持
-        const buttonIconClassName = createClassName(button.querySelector('div')!.className);
-        return [button, buttonIconClassName];
-    } else {
-        // 子要素(アイコン)のdivからボタンを特定
-        const buttons = document.querySelectorAll<HTMLButtonElement>(
-            `button:has(> div${buttonIconClassName})`,
-        );
+        const iconDiv = button.querySelector<HTMLDivElement>('div');
+        if (!iconDiv) {
+            return false;
+        }
 
-        // upscaleは2つある(i2iと生成画像の上)ので2個目を取る
-        const button = projectionId === PROJECTION_ID_UPSCALE ? buttons[1] : buttons[0];
-        return [button, buttonIconClassName];
-    }
+        const iconUrl = getComputedStyle(iconDiv).maskImage;
+        return iconUrl.includes(buttonIconName);
+    });
+    return targetButton!;
 };

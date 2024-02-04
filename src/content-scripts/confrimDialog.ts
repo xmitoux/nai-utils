@@ -4,26 +4,26 @@ import {
     upscaleButton,
     variationButton,
 } from '@/content-scripts/setupContents';
-import { addEventListener } from '@/utils';
+import { addEvent } from '@/utils';
 
 export const confirmDialog = ({ confirmDialog }: ExtensionSettings) => {
     const proc = () => {
         if (generateButton) {
-            addEventListener(generateButton, 'click', 'confirmAdded', onClick);
+            addEvent(generateButton, 'click', 'confirmAdded', onClick);
         }
 
         if (upscaleButtonText) {
-            addEventListener(upscaleButtonText, 'click', 'confirmAdded', onClick);
+            addEvent(upscaleButtonText, 'click', 'confirmAdded', onClick);
         }
 
         // バリエーションボタン
         if (variationButton) {
-            addEventListener(variationButton, 'click', 'confirmAdded', onClick);
+            addEvent(variationButton, 'click', 'confirmAdded', onClick);
         }
 
         // upscaleボタン
         if (upscaleButton) {
-            addEventListener(upscaleButton, 'click', 'confirmAdded', onClick);
+            addEvent(upscaleButton, 'click', 'confirmAdded', onClick);
         }
     };
 
