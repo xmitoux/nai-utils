@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { ElForm, ElFormItem, ElSwitch } from 'element-plus';
+import { ElButton, ElForm, ElFormItem, ElSwitch } from 'element-plus';
 import { ACTION_UPDATE_SETTINGS } from '@/constants/chrome-api';
 import { NAI_URL } from '@/constants/nai';
 import { defaultExtensionSettings } from '@/utils';
@@ -20,9 +20,21 @@ const saveSettings = async () => {
         await chrome.tabs.sendMessage(tab.id, { action: ACTION_UPDATE_SETTINGS });
     }
 };
+
+const settingAll = (flag: boolean) => {
+    Object.keys(currentSettings.value).forEach((key) => {
+        const settingKey = key as keyof ExtensionSettings;
+        currentSettings.value[settingKey] = flag;
+    });
+
+    saveSettings();
+};
 </script>
 
 <template>
+    <ElButton @click="settingAll(true)">すべてON</ElButton>
+    <ElButton @click="settingAll(false)">すべてOFF</ElButton>
+
     <h2>生成設定</h2>
     <ElForm label-position="left" label-width="300px">
         <ElFormItem label="Enterキーによる生成を無効化する">
