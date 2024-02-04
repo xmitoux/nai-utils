@@ -1,11 +1,13 @@
-import { watchHistoryScripts } from './content-scripts/watch-history-scripts';
+import { historyScripts } from './content-scripts/historyScripts';
 import { deleteHistoryWithoutConfirm } from './content-scripts/delete-history-without-confirm';
-import { disableEnterGeneration } from './content-scripts/disable-enter-generation';
-import { saveHistoryShortcut } from './content-scripts/save-hisotry-shortcut';
+import { generationScripts } from './content-scripts/generationScripts';
 import { noModelSelector } from './content-scripts/no-model-selector';
-import { shrinkPromptArea } from './content-scripts/shrink-prompt-area';
+import { shrinkPromptArea } from './content-scripts/shrinkPromptArea';
 
 import { ACTION_GET_SETTINGS } from '@/constants/chrome-api';
+import { setupContents } from './content-scripts/setupContents';
+import { confirmDialog } from './content-scripts/confrimDialog';
+import { addSliderButton } from './content-scripts/addSliderButton';
 
 // ページ読み込み時に設定を取得する
 chrome.runtime.sendMessage({ action: ACTION_GET_SETTINGS }, (response) => {
@@ -15,9 +17,11 @@ chrome.runtime.sendMessage({ action: ACTION_GET_SETTINGS }, (response) => {
 
     const extensionSettings = response.settings as ExtensionSettings;
 
-    if (extensionSettings.disableEnterKeyGeneration) {
-        disableEnterGeneration();
-    }
+    setupContents();
+    generationScripts(extensionSettings);
+    historyScripts(extensionSettings);
+    confirmDialog(extensionSettings);
+    addSliderButton(extensionSettings);
 
     if (extensionSettings.hideModelSelector) {
         noModelSelector();
@@ -27,13 +31,7 @@ chrome.runtime.sendMessage({ action: ACTION_GET_SETTINGS }, (response) => {
         deleteHistoryWithoutConfirm();
     }
 
-    if (extensionSettings.enableHistorySaveShortcut) {
-        saveHistoryShortcut();
-    }
-
     if (extensionSettings.shrinkPromptArea) {
         shrinkPromptArea();
     }
-
-    watchHistoryScripts(extensionSettings);
 });
