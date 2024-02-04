@@ -27,4 +27,10 @@ export const manifest = defineManifest((env) => ({
             js: ['./src/content.ts'],
         },
     ],
+    web_accessible_resources: [
+        {
+            matches: ['https://novelai.net/*'],
+            resources: ['assets/*'],
+        },
+    ],
 }));

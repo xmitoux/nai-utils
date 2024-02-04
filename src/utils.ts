@@ -10,6 +10,7 @@ export const defaultExtensionSettings: ExtensionSettings = {
     shrinkPromptArea: false,
     confirmDialog: false,
     sliderButton: false,
+    generatedSound: false,
 };
 
 /**

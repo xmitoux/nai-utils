@@ -1,16 +1,21 @@
 import dayjs from 'dayjs';
 import { addEvent } from '@/utils';
-import { saveButton, overlay } from '@/content-scripts/setupContents';
+import { saveButton, overlay, generatedImage } from '@/content-scripts/setupContents';
 import { BUTTON_TEXT_SEED_EN, BUTTON_TEXT_SEED_JA } from '@/constants/nai';
+import audioFile from '/assets/generated-sound.mp3';
 
 export const historyScripts = ({
     wheelHistory,
     datetimeFilename,
     enableHistorySaveShortcut,
+    generatedSound,
 }: ExtensionSettings) => {
     let selectedIndex = 0;
     let thumbnails: NodeListOf<HTMLDivElement>;
     let historyObserver: MutationObserver | null = null;
+
+    const audioUrl = chrome.runtime.getURL(audioFile);
+    const audio = new Audio(audioUrl);
 
     const hisotryObserver = () => {
         const historyContainer = document.querySelector<HTMLElement>('#historyContainer');
@@ -32,6 +37,8 @@ export const historyScripts = ({
                     // 保存ボタンの色をデフォルトに戻す
                     saveButton.style.opacity = '';
                 }
+
+                generatedSound && audio.play();
             };
             newImageGenerated();
 
@@ -168,10 +175,8 @@ export const historyScripts = ({
 };
 
 const downloadDatetimeNamedImage = async () => {
-    const imageElement = document.querySelector<HTMLImageElement>('img')!;
-
     // Blob URLからBlobを取得
-    const response = await fetch(imageElement.src);
+    const response = await fetch(generatedImage!.src);
     const blob = await response.blob();
 
     // Blobからダウンロード用のURLを作成
