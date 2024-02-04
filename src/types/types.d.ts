@@ -10,4 +10,5 @@ type ExtensionSettings = {
     highlightViewedHistory: boolean;
     confirmDialog: boolean;
     sliderButton: boolean;
+    generatedSound: boolean;
 };
