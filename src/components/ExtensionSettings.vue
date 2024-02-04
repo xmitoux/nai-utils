@@ -89,6 +89,9 @@ const settingAll = (flag: boolean) => {
         <ElFormItem label="Anlas消費時の確認ダイアログを表示する">
             <ElSwitch v-model="currentSettings.confirmDialog" @change="saveSettings" />
         </ElFormItem>
+        <ElFormItem label="生成完了時に音を鳴らす">
+            <ElSwitch v-model="currentSettings.generatedSound" @change="saveSettings" />
+        </ElFormItem>
     </ElForm>
 </template>
 
