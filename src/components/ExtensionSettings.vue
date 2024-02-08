@@ -89,6 +89,10 @@ const changePromptHeight = () => {
             <ElSwitch v-model="currentSettings.hideModelSelector" @change="saveSettings" />
         </ElFormItem>
 
+        <ElFormItem label="画像設定欄を生成画像上部に移動する">
+            <ElSwitch v-model="currentSettings.rearrangeImageSettings" @change="saveSettings" />
+        </ElFormItem>
+
         <ElFormItem label="プロンプト欄の幅を変更する(%) (0でOFF)">
             <ElInputNumber
                 v-model="currentSettings.promptWidth"

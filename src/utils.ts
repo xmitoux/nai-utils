@@ -15,6 +15,7 @@ export const defaultExtensionSettings: ExtensionSettings = {
     promptHeight: 0,
     resizePromptHeight: false,
     importImageWithoutConfirm: false,
+    rearrangeImageSettings: false,
 };
 
 /**

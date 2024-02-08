@@ -15,4 +15,5 @@ type ExtensionSettings = {
     promptHeight: number;
     resizePromptHeight: boolean;
     importImageWithoutConfirm: boolean;
+    rearrangeImageSettings: boolean;
 };

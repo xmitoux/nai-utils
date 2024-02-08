@@ -7,6 +7,7 @@ import { setupContents } from './content-scripts/setupContents';
 import { confirmDialog } from './content-scripts/confrimDialog';
 import { addSliderButton } from './content-scripts/addSliderButton';
 import { resizePromptArea } from './content-scripts/resizePromptArea';
+import { rearrangeImageSettings } from './content-scripts/rearrangeImageSettings';
 
 // ページ読み込み時に設定を取得する
 chrome.runtime.sendMessage({ action: ACTION_GET_SETTINGS }, (response) => {
@@ -23,6 +24,7 @@ chrome.runtime.sendMessage({ action: ACTION_GET_SETTINGS }, (response) => {
     addSliderButton(extensionSettings);
     resizePromptArea(extensionSettings);
     withoutConfirm(extensionSettings);
+    rearrangeImageSettings(extensionSettings);
 
     if (extensionSettings.hideModelSelector) {
         noModelSelector();

@@ -6,6 +6,8 @@ import {
     BUTTON_ICON_SAVE,
     BUTTON_ICON_VARIATIONS,
     BUTTON_ICON_UPSCALE,
+    DIV_TEXT_IMAGE_SETTINGS_EN,
+    DIV_TEXT_IMAGE_SETTINGS_JA,
 } from '@/constants/nai';
 
 export let generateButton: HTMLButtonElement | undefined;
@@ -18,6 +20,7 @@ export let generatedImage: HTMLImageElement | undefined;
 export let leftPaneDiv: HTMLDivElement | undefined;
 export let promptTextarea: HTMLTextAreaElement | undefined;
 export let promptNegativeTextarea: HTMLTextAreaElement | undefined;
+export let imageSettings: HTMLDivElement | undefined;
 
 export const setupContents = () => {
     const proc = () => {
@@ -134,6 +137,25 @@ export const setupContents = () => {
             }
         };
         setupPromptArea();
+
+        const setupImageSettings = () => {
+            // 画像設定欄をラベルから取得
+            const imageSettingsLabel = Array.from(
+                document.querySelectorAll<HTMLDivElement>('div'),
+            ).find((div) => {
+                const textContent = div.textContent;
+                return (
+                    textContent === DIV_TEXT_IMAGE_SETTINGS_EN ||
+                    textContent === DIV_TEXT_IMAGE_SETTINGS_JA
+                );
+            });
+
+            const parent = imageSettingsLabel?.parentNode?.parentElement;
+            if (parent) {
+                imageSettings = parent as HTMLDivElement;
+            }
+        };
+        setupImageSettings();
     };
 
     // inpaint等で画面が切り替わるとイベントリスナが破壊されるので監視して登録
