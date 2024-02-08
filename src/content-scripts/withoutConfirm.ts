@@ -4,7 +4,7 @@ import {
     BUTTON_TEXT_IMPORT_IMAGE_JA,
 } from '@/constants/nai';
 
-export const deleteHistoryWithoutConfirm = ({
+export const withoutConfirm = ({
     enableDeleteHistoryWithoutConfirm,
     importImageWithoutConfirm,
 }: ExtensionSettings) => {

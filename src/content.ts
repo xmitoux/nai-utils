@@ -1,5 +1,5 @@
 import { historyScripts } from './content-scripts/historyScripts';
-import { deleteHistoryWithoutConfirm } from './content-scripts/delete-history-without-confirm';
+import { withoutConfirm } from './content-scripts/withoutConfirm';
 import { generationScripts } from './content-scripts/generationScripts';
 import { noModelSelector } from './content-scripts/no-model-selector';
 import { ACTION_GET_SETTINGS } from '@/constants/chrome-api';
@@ -22,7 +22,7 @@ chrome.runtime.sendMessage({ action: ACTION_GET_SETTINGS }, (response) => {
     confirmDialog(extensionSettings);
     addSliderButton(extensionSettings);
     resizePromptArea(extensionSettings);
-    deleteHistoryWithoutConfirm(extensionSettings);
+    withoutConfirm(extensionSettings);
 
     if (extensionSettings.hideModelSelector) {
         noModelSelector();
