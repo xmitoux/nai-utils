@@ -11,27 +11,44 @@ export const addSliderButton = ({ sliderButton }: ExtensionSettings) => {
                     return;
                 }
 
+                type SliderType =
+                    | 'Pen Size'
+                    | 'ペンサイズ'
+                    | 'Strength'
+                    | '強度'
+                    | 'Noise'
+                    | 'ノイズ';
+                const sliderTypes: SliderType[] = [
+                    'Pen Size',
+                    'ペンサイズ',
+                    'Strength',
+                    '強度',
+                    'Noise',
+                    'ノイズ',
+                ];
+
                 const sliderName = slider.previousElementSibling?.textContent;
                 if (
-                    !sliderName?.includes('Pen Size') &&
-                    !sliderName?.includes('Strength') &&
-                    !sliderName?.includes('Noise')
+                    !sliderName ||
+                    !sliderTypes.some((sliderType) => sliderName.includes(sliderType))
                 ) {
                     return;
                 }
 
                 type ButtonConfig = {
-                    type: 'Pen Size' | 'Strength' | 'Noise';
+                    type: SliderType;
                     step: number;
                     min?: number;
                     parentWidth?: string;
                 };
 
                 let buttonConfig: ButtonConfig;
-                if (sliderName.includes('Pen Size')) {
+                if (sliderName.includes('Pen Size') || sliderName.includes('ペンサイズ')) {
                     if (
                         [...document.querySelectorAll('span')].every(
-                            (span) => span.textContent !== 'Draw Mask',
+                            (span) =>
+                                span.textContent !== 'Draw Mask' &&
+                                span.textContent !== 'マスク追加',
                         )
                     ) {
                         // ペイント画面には表示しない
@@ -39,7 +56,7 @@ export const addSliderButton = ({ sliderButton }: ExtensionSettings) => {
                     }
 
                     buttonConfig = { type: 'Pen Size', step: 1, min: 1 };
-                } else if (sliderName.includes('Strength')) {
+                } else if (sliderName.includes('Strength') || sliderName.includes('強度')) {
                     buttonConfig = { type: 'Strength', step: 0.05, parentWidth: '40px' };
                 } else {
                     buttonConfig = { type: 'Noise', step: 0.05, parentWidth: '40px' };
