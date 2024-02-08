@@ -40,9 +40,13 @@ export const historyScripts = ({
 
                 generatedSound && audio.play();
             };
-            newImageGenerated();
 
+            // サムネが増えたら新規生成と判定
+            const oldThumbnailsCount = thumbnails?.length ?? 0;
             thumbnails = historyContainer.querySelectorAll<HTMLDivElement>('div[role="button"]');
+            if (thumbnails.length > oldThumbnailsCount) {
+                newImageGenerated();
+            }
 
             // サムネwheelイベント
             const addWheelEvent = () => {
