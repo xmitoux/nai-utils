@@ -6,6 +6,8 @@ import {
     BUTTON_ICON_SAVE,
     BUTTON_ICON_VARIATIONS,
     BUTTON_ICON_UPSCALE,
+    DIV_TEXT_IMAGE_SETTINGS_EN,
+    DIV_TEXT_IMAGE_SETTINGS_JA,
 } from '@/constants/nai';
 
 export let generateButton: HTMLButtonElement | undefined;
@@ -15,6 +17,10 @@ export let variationButton: HTMLButtonElement | undefined;
 export let upscaleButton: HTMLButtonElement | undefined;
 export let overlay: HTMLDivElement | undefined;
 export let generatedImage: HTMLImageElement | undefined;
+export let leftPaneDiv: HTMLDivElement | undefined;
+export let promptTextarea: HTMLTextAreaElement | undefined;
+export let promptNegativeTextarea: HTMLTextAreaElement | undefined;
+export let imageSettings: HTMLDivElement | undefined;
 
 export const setupContents = () => {
     const proc = () => {
@@ -98,6 +104,58 @@ export const setupContents = () => {
             }
         };
         setupViewedHighlightOverlay();
+
+        const setupLeftPaneDiv = () => {
+            // ホームボタン要素を取得
+            const anchorElement = document.querySelector<HTMLAnchorElement>('a[href="/stories"]');
+            if (!anchorElement) {
+                return;
+            }
+
+            // 親要素を取得
+            const anchorGrandParent = anchorElement.parentElement?.parentElement;
+            if (!anchorGrandParent) {
+                return;
+            }
+
+            leftPaneDiv = anchorGrandParent as HTMLDivElement;
+        };
+        setupLeftPaneDiv();
+
+        const setupPromptArea = () => {
+            const promptTextareaList = document.querySelectorAll<HTMLTextAreaElement>('textarea');
+            if (!promptTextareaList.length) {
+                return;
+            }
+
+            promptTextarea = promptTextareaList[0] as HTMLTextAreaElement;
+
+            if (promptTextareaList[1]) {
+                // プロンプト2段表示の場合にこれでネガティブが取得できるが、
+                // そうでない場合でも見えない謎のテキストエリアが取得されるので注意
+                promptNegativeTextarea = promptTextareaList[1];
+            }
+        };
+        setupPromptArea();
+
+        const setupImageSettings = () => {
+            // 画像設定欄をラベルから取得
+            const imageSettingsLabel = Array.from(
+                document.querySelectorAll<HTMLDivElement>('div'),
+            ).find((div) => {
+                const textContent = div.textContent;
+                return (
+                    textContent === DIV_TEXT_IMAGE_SETTINGS_EN ||
+                    textContent === DIV_TEXT_IMAGE_SETTINGS_JA
+                );
+            });
+
+            const parent = imageSettingsLabel?.parentNode?.parentElement;
+            if (parent) {
+                imageSettings = parent as HTMLDivElement;
+            }
+        };
+        setupImageSettings();
     };
 
     // inpaint等で画面が切り替わるとイベントリスナが破壊されるので監視して登録
