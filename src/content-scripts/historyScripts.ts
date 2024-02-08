@@ -2,7 +2,6 @@ import dayjs from 'dayjs';
 import { addEvent } from '@/utils';
 import { saveButton, overlay, generatedImage } from '@/content-scripts/setupContents';
 import { BUTTON_TEXT_SEED_EN, BUTTON_TEXT_SEED_JA } from '@/constants/nai';
-import audioFile from '/assets/generated-sound.mp3';
 
 export const historyScripts = ({
     wheelHistory,
@@ -14,7 +13,7 @@ export const historyScripts = ({
     let thumbnails: NodeListOf<HTMLDivElement>;
     let historyObserver: MutationObserver | null = null;
 
-    const audioUrl = chrome.runtime.getURL(audioFile);
+    const audioUrl = chrome.runtime.getURL('/assets/generated-sound.mp3');
     const audio = new Audio(audioUrl);
 
     const hisotryObserver = () => {
