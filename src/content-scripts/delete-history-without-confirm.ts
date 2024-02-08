@@ -1,10 +1,29 @@
-export const deleteHistoryWithoutConfirm = () => {
+import {
+    BUTTON_TEXT_DELETE_HISTORY,
+    BUTTON_TEXT_IMPORT_IMAGE_EN,
+    BUTTON_TEXT_IMPORT_IMAGE_JA,
+} from '@/constants/nai';
+
+export const deleteHistoryWithoutConfirm = ({
+    enableDeleteHistoryWithoutConfirm,
+    importImageWithoutConfirm,
+}: ExtensionSettings) => {
     const proc = () => {
         const buttons = document.querySelectorAll('button');
 
         buttons.forEach((button) => {
-            if (button.textContent === 'Delete it!') {
-                // 日本語設定でも'Delete it!'
+            if (
+                enableDeleteHistoryWithoutConfirm &&
+                button.textContent === BUTTON_TEXT_DELETE_HISTORY
+            ) {
+                button.click();
+            }
+
+            if (
+                importImageWithoutConfirm &&
+                (button.textContent === BUTTON_TEXT_IMPORT_IMAGE_EN ||
+                    button.textContent === BUTTON_TEXT_IMPORT_IMAGE_JA)
+            ) {
                 button.click();
             }
         });

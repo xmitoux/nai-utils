@@ -22,12 +22,9 @@ chrome.runtime.sendMessage({ action: ACTION_GET_SETTINGS }, (response) => {
     confirmDialog(extensionSettings);
     addSliderButton(extensionSettings);
     resizePromptArea(extensionSettings);
+    deleteHistoryWithoutConfirm(extensionSettings);
 
     if (extensionSettings.hideModelSelector) {
         noModelSelector();
-    }
-
-    if (extensionSettings.enableDeleteHistoryWithoutConfirm) {
-        deleteHistoryWithoutConfirm();
     }
 });

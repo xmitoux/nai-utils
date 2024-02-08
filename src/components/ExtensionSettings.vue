@@ -51,7 +51,7 @@ const changePromptHeight = () => {
     <ElButton @click="settingAll(true)">すべてON</ElButton>
     <ElButton @click="settingAll(false)">すべてOFF</ElButton>
 
-    <h2>生成設定</h2>
+    <h3>生成設定</h3>
     <ElForm label-position="left" label-width="300px">
         <ElFormItem label="Enterキーによる生成を無効化する">
             <ElSwitch v-model="currentSettings.disableEnterKeyGeneration" @change="saveSettings" />
@@ -62,7 +62,7 @@ const changePromptHeight = () => {
         </ElFormItem>
     </ElForm>
 
-    <h2>生成履歴設定</h2>
+    <h3>生成履歴設定</h3>
     <ElForm label-position="left" label-width="300px">
         <ElFormItem label="生成履歴を右クリックで保存する">
             <ElSwitch v-model="currentSettings.enableHistorySaveShortcut" @change="saveSettings" />
@@ -83,7 +83,7 @@ const changePromptHeight = () => {
         </ElFormItem>
     </ElForm>
 
-    <h2>見た目の設定</h2>
+    <h3>見た目の設定</h3>
     <ElForm label-position="left" label-width="300px">
         <ElFormItem label="モデル選択ボックスを非表示にする">
             <ElSwitch v-model="currentSettings.hideModelSelector" @change="saveSettings" />
@@ -129,8 +129,8 @@ const changePromptHeight = () => {
         </ElFormItem>
     </ElForm>
 
-    <h2>その他の設定</h2>
-    <ElForm label-position="left" label-width="300px">
+    <h3>その他の設定</h3>
+    <ElForm label-position="left" label-width="375px">
         <ElFormItem label="保存ファイル名を<日時-シード>にする">
             <ElSwitch v-model="currentSettings.datetimeFilename" @change="saveSettings" />
         </ElFormItem>
@@ -139,6 +139,9 @@ const changePromptHeight = () => {
         </ElFormItem>
         <ElFormItem label="Anlas消費時の確認ダイアログを表示する">
             <ElSwitch v-model="currentSettings.confirmDialog" @change="saveSettings" />
+        </ElFormItem>
+        <ElFormItem label="画像読込時、自動で「画像のインポート」を選択する">
+            <ElSwitch v-model="currentSettings.importImageWithoutConfirm" @change="saveSettings" />
         </ElFormItem>
         <ElFormItem label="生成完了時に音を鳴らす">
             <ElSwitch v-model="currentSettings.generatedSound" @change="saveSettings" />
