@@ -11,6 +11,9 @@ export const defaultExtensionSettings: ExtensionSettings = {
     confirmDialog: false,
     sliderButton: false,
     generatedSound: false,
+    promptWidth: 0,
+    promptHeight: 0,
+    resizePromptHeight: false,
 };
 
 /**

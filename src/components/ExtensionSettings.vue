@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import { ElButton, ElForm, ElFormItem, ElSwitch } from 'element-plus';
+import { ref, onMounted, computed } from 'vue';
+import { ElButton, ElForm, ElFormItem, ElInputNumber, ElSwitch, ElTooltip } from 'element-plus';
 import { ACTION_UPDATE_SETTINGS } from '@/constants/chrome-api';
 import { NAI_URL } from '@/constants/nai';
 import { defaultExtensionSettings } from '@/utils';
@@ -24,9 +24,25 @@ const saveSettings = async () => {
 const settingAll = (flag: boolean) => {
     Object.keys(currentSettings.value).forEach((key) => {
         const settingKey = key as keyof ExtensionSettings;
-        currentSettings.value[settingKey] = flag;
+        if (settingKey !== 'promptWidth' && settingKey !== 'promptHeight') {
+            currentSettings.value[settingKey] = flag;
+        } else {
+            currentSettings.value[settingKey] = flag ? 30 : 0;
+        }
     });
 
+    // リサイズ設定は高さ変更と二者択一のためONにしない
+    currentSettings.value.resizePromptHeight = false;
+
+    saveSettings();
+};
+
+const enablePromptHeight = computed(() => currentSettings.value.promptHeight > 0);
+const changePromptHeight = () => {
+    if (enablePromptHeight.value) {
+        // プロンプトの高さ設定をする場合はリサイズは設定不可
+        currentSettings.value.resizePromptHeight = false;
+    }
     saveSettings();
 };
 </script>
@@ -73,8 +89,43 @@ const settingAll = (flag: boolean) => {
             <ElSwitch v-model="currentSettings.hideModelSelector" @change="saveSettings" />
         </ElFormItem>
 
-        <ElFormItem label="プロンプト欄の高さを固定する">
-            <ElSwitch v-model="currentSettings.shrinkPromptArea" @change="saveSettings" />
+        <ElFormItem label="プロンプト欄の幅を変更する(%) (0でOFF)">
+            <ElInputNumber
+                v-model="currentSettings.promptWidth"
+                controls-position="right"
+                :min="0"
+                :max="80"
+                size="small"
+                :step="10"
+                @change="saveSettings"
+            />
+        </ElFormItem>
+
+        <ElFormItem label="プロンプト欄の高さを変更する(%) (0でOFF)">
+            <ElInputNumber
+                v-model="currentSettings.promptHeight"
+                controls-position="right"
+                :min="0"
+                :max="80"
+                size="small"
+                :step="10"
+                @change="changePromptHeight"
+            />
+        </ElFormItem>
+
+        <ElFormItem label="プロンプト欄の高さをリサイズ可能にする">
+            <ElTooltip
+                :disabled="!enablePromptHeight"
+                effect="dark"
+                content="プロンプト欄の高さを変更する場合は設定できません。"
+                placement="top"
+            >
+                <ElSwitch
+                    v-model="currentSettings.resizePromptHeight"
+                    :disabled="enablePromptHeight"
+                    @change="saveSettings"
+                />
+            </ElTooltip>
         </ElFormItem>
     </ElForm>
 
