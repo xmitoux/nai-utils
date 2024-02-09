@@ -22,7 +22,7 @@ export let promptTextarea: HTMLTextAreaElement | undefined;
 export let promptNegativeTextarea: HTMLTextAreaElement | undefined;
 export let imageSettings: HTMLDivElement | undefined;
 
-export const setupContents = () => {
+export const setupContents = ({ highlightViewedHistory }: ExtensionSettings) => {
     const proc = () => {
         const buttons = [...document.querySelectorAll<HTMLButtonElement>('button')];
 
@@ -103,7 +103,7 @@ export const setupContents = () => {
                 imageGrandParent.dataset.overlayAdded = 'true';
             }
         };
-        setupViewedHighlightOverlay();
+        highlightViewedHistory && setupViewedHighlightOverlay();
 
         const setupLeftPaneDiv = () => {
             // ホームボタン要素を取得
