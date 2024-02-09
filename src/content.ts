@@ -17,7 +17,7 @@ chrome.runtime.sendMessage({ action: ACTION_GET_SETTINGS }, (response) => {
 
     const extensionSettings = response.settings as ExtensionSettings;
 
-    setupContents();
+    setupContents(extensionSettings);
     generationScripts(extensionSettings);
     historyScripts(extensionSettings);
     confirmDialog(extensionSettings);
