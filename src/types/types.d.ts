@@ -11,4 +11,9 @@ type ExtensionSettings = {
     confirmDialog: boolean;
     sliderButton: boolean;
     generatedSound: boolean;
+    promptWidth: number;
+    promptHeight: number;
+    resizePromptHeight: boolean;
+    importImageWithoutConfirm: boolean;
+    rearrangeImageSettings: boolean;
 };
