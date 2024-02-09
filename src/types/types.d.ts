@@ -17,4 +17,7 @@ type ExtensionSettings = {
     importImageWithoutConfirm: boolean;
     rearrangeImageSettings: boolean;
     pasteNewline: boolean;
+    shortcutControlBracket: boolean;
+    shortcutAutoBracket: boolean;
+    shortcutMoveLine: boolean;
 };

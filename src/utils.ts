@@ -17,6 +17,9 @@ export const defaultExtensionSettings: ExtensionSettings = {
     importImageWithoutConfirm: false,
     rearrangeImageSettings: false,
     pasteNewline: false,
+    shortcutControlBracket: false,
+    shortcutAutoBracket: false,
+    shortcutMoveLine: false,
 };
 
 /**
@@ -39,4 +42,11 @@ export const addEvent = <T extends Event>(
         element.addEventListener(event, (e) => listener(e as T));
         element.dataset[flagName] = 'true';
     }
+};
+
+export const submitPrompt = (promptTextarea: HTMLTextAreaElement) => {
+    // プロンプト欄のReactコンポーネントのinputイベントを発火させてテキスト入力を確定させる
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (promptTextarea as any)._valueTracker = '';
+    promptTextarea.dispatchEvent(new Event('input', { bubbles: true }));
 };
