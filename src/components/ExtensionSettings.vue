@@ -133,6 +133,16 @@ const changePromptHeight = () => {
         </ElFormItem>
     </ElForm>
 
+    <h3>ショートカットキー設定</h3>
+    <ElForm label-position="left" label-width="375px">
+        <ElFormItem label='Ctrl / Alt + ↑ / ↓キー で"{}" / "[]"の数を増減する'>
+            <ElSwitch v-model="currentSettings.shortcutControlBracket" @change="saveSettings" />
+        </ElFormItem>
+        <ElFormItem label='"{", "[" を自動で閉じる'>
+            <ElSwitch v-model="currentSettings.shortcutAutoBracket" @change="saveSettings" />
+        </ElFormItem>
+    </ElForm>
+
     <h3>その他の設定</h3>
     <ElForm label-position="left" label-width="375px">
         <ElFormItem label="保存ファイル名を<日時-シード>にする">
