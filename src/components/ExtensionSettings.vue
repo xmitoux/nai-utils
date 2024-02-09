@@ -141,6 +141,9 @@ const changePromptHeight = () => {
         <ElFormItem label='"{", "[" を自動で閉じる'>
             <ElSwitch v-model="currentSettings.shortcutAutoBracket" @change="saveSettings" />
         </ElFormItem>
+        <ElFormItem label="Ctrl + Alt + ↑ / ↓キー で行を移動する">
+            <ElSwitch v-model="currentSettings.shortcutMoveLine" @change="saveSettings" />
+        </ElFormItem>
     </ElForm>
 
     <h3>その他の設定</h3>

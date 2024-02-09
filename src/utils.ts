@@ -19,6 +19,7 @@ export const defaultExtensionSettings: ExtensionSettings = {
     pasteNewline: false,
     shortcutControlBracket: false,
     shortcutAutoBracket: false,
+    shortcutMoveLine: false,
 };
 
 /**

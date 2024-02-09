@@ -5,6 +5,7 @@ import {
 } from '@/content-scripts/setupContents';
 import { addEvent } from '@/utils';
 import { autoBracket, controlBracket } from './shortcutBracket';
+import { moveLine } from './shortcutMoveLine';
 
 export const costomizePromptArea = ({
     promptWidth,
@@ -13,6 +14,7 @@ export const costomizePromptArea = ({
     pasteNewline,
     shortcutControlBracket,
     shortcutAutoBracket,
+    shortcutMoveLine,
 }: ExtensionSettings) => {
     const proc = () => {
         // プロンプト欄の幅(左ペイン)を広げる
@@ -66,17 +68,16 @@ export const costomizePromptArea = ({
         const procAddShortcuts = () => {
             const addShortcutsToPromptArea = (promptArea: HTMLTextAreaElement) => {
                 const handleShortcuts = (keyEvent: KeyboardEvent) => {
-                    controlBracket(keyEvent);
+                    shortcutControlBracket && controlBracket(keyEvent);
+                    shortcutMoveLine && moveLine(keyEvent);
                 };
 
                 const handleInput = (inputEvent: InputEvent) => {
-                    autoBracket(inputEvent);
+                    shortcutAutoBracket && autoBracket(inputEvent);
                 };
 
-                shortcutControlBracket &&
-                    addEvent(promptArea, 'keydown', 'shortcutsAdded', handleShortcuts);
-                shortcutAutoBracket &&
-                    addEvent(promptArea, 'beforeinput', 'beforeInputAdded', handleInput);
+                addEvent(promptArea, 'keydown', 'shortcutsAdded', handleShortcuts);
+                addEvent(promptArea, 'beforeinput', 'beforeInputAdded', handleInput);
             };
 
             procPositiveAndNegative(

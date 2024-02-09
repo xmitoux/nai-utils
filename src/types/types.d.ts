@@ -19,4 +19,5 @@ type ExtensionSettings = {
     pasteNewline: boolean;
     shortcutControlBracket: boolean;
     shortcutAutoBracket: boolean;
+    shortcutMoveLine: boolean;
 };
