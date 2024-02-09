@@ -16,4 +16,5 @@ type ExtensionSettings = {
     resizePromptHeight: boolean;
     importImageWithoutConfirm: boolean;
     rearrangeImageSettings: boolean;
+    pasteNewline: boolean;
 };

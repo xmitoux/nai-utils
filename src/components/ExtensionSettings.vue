@@ -138,6 +138,9 @@ const changePromptHeight = () => {
         <ElFormItem label="保存ファイル名を<日時-シード>にする">
             <ElSwitch v-model="currentSettings.datetimeFilename" @change="saveSettings" />
         </ElFormItem>
+        <ElFormItem label="プロンプト貼り付け時に改行を保持する">
+            <ElSwitch v-model="currentSettings.pasteNewline" @change="saveSettings" />
+        </ElFormItem>
         <ElFormItem label="一部のスライダーに +/- ボタンを表示する">
             <ElSwitch v-model="currentSettings.sliderButton" @change="saveSettings" />
         </ElFormItem>
