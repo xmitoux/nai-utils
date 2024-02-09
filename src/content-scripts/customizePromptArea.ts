@@ -3,11 +3,13 @@ import {
     promptNegativeTextarea,
     promptTextarea,
 } from '@/content-scripts/setupContents';
+import { addEvent } from '@/utils';
 
-export const resizePromptArea = ({
+export const costomizePromptArea = ({
     promptWidth,
     promptHeight,
     resizePromptHeight,
+    pasteNewline,
 }: ExtensionSettings) => {
     const proc = () => {
         // プロンプト欄の幅(左ペイン)を広げる
@@ -46,6 +48,26 @@ export const resizePromptArea = ({
             }
         };
         resizePromptArea();
+
+        const enablePasteNewline = () => {
+            if (!promptTextarea) {
+                return;
+            }
+
+            const stopPropagationPaste = (event: ClipboardEvent) => {
+                // ペースト時のイベントで改行削除処理をしてるっぽいのでstop
+                event.stopPropagation();
+            };
+
+            addEvent(promptTextarea, 'paste', 'pasteEventAdded', stopPropagationPaste);
+
+            if (!promptNegativeTextarea) {
+                return;
+            }
+
+            addEvent(promptNegativeTextarea, 'paste', 'pasteEventAdded', stopPropagationPaste);
+        };
+        pasteNewline && enablePasteNewline();
     };
 
     new MutationObserver(proc).observe(document.body, { childList: true, subtree: true });
