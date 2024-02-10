@@ -10,7 +10,7 @@ export const controlBracket = (event: KeyboardEvent) => {
     const isArrowUp = event.code === 'ArrowUp';
     const isArrowDown = event.code === 'ArrowDown';
 
-    if ((!isCtrl && !isAlt) || (!isArrowUp && !isArrowDown)) {
+    if ((!isCtrl && !isAlt) || (isCtrl && isAlt) || (!isArrowUp && !isArrowDown)) {
         return;
     }
 
