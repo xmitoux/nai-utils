@@ -62,7 +62,7 @@ export const setupContents = ({ highlightViewedHistory }: ExtensionSettings) => 
         };
         setupIconButtons();
 
-        const setupViewedHighlightOverlay = () => {
+        const setupGeneratedImage = () => {
             // 生成画像要素を取得
             const imageElements = document.querySelectorAll<HTMLImageElement>('img');
             if (!imageElements.length) {
@@ -71,6 +71,13 @@ export const setupContents = ({ highlightViewedHistory }: ExtensionSettings) => 
 
             // inpaint中は対象画像がimgタグとして2つ存在するので3つ目を取得
             generatedImage = imageElements.length === 1 ? imageElements[0] : imageElements[2];
+        };
+        setupGeneratedImage();
+
+        const setupViewedHighlightOverlay = () => {
+            if (!generatedImage) {
+                return;
+            }
 
             // 生成画像の親要素を取得
             const imageGrandParent = generatedImage.parentElement?.parentElement;
