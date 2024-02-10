@@ -85,7 +85,6 @@ export const costomizePromptArea = ({
                 () => addShortcutsToPromptArea(promptNegativeTextarea!),
             );
         };
-        // TODO: 設定値追加
         procAddShortcuts();
     };
 
