@@ -2,19 +2,16 @@ import { createClassName } from '@/utils';
 
 export const noModelSelector = () => {
     const proc = () => {
-        const modelSelectorChildClass = 'select css-vopfii-container';
-        const modelSelectorChild = document.querySelector(createClassName(modelSelectorChildClass));
-        if (!modelSelectorChild) {
+        const modelSelectorClass = 'sc-a1af5457-12 bypOGh';
+        const modelSelector = document.querySelector<HTMLDivElement>(
+            createClassName(modelSelectorClass),
+        );
+        if (!modelSelector) {
             return;
         }
 
-        const parent = modelSelectorChild.parentNode as HTMLDivElement;
-        if (!parent) {
-            return;
-        }
-
-        if (parent.style.display !== 'none') {
-            parent.style.display = 'none';
+        if (modelSelector.style.display !== 'none') {
+            modelSelector.style.display = 'none';
         }
     };
 
