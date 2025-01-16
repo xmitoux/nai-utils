@@ -5,7 +5,7 @@ import {
     originalPromptAreaDiv,
     originalNegativePromptAreaDiv,
 } from '@/content-scripts/setupContents';
-import { addEvent } from '@/utils';
+import { addEvent, submitPrompt } from '@/utils';
 import { autoBracket, controlBracket } from './shortcutBracket';
 import { moveLine } from './shortcutMoveLine';
 
@@ -13,7 +13,6 @@ export const costomizePromptArea = ({
     promptWidth,
     promptHeight,
     resizePromptHeight,
-    pasteNewline,
     shortcutControlBracket,
     shortcutAutoBracket,
     shortcutMoveLine,
@@ -54,25 +53,6 @@ export const costomizePromptArea = ({
         };
         resizePromptArea();
 
-        const enablePasteNewline = () => {
-            const stopPropagationPaste = (event: ClipboardEvent) => {
-                // ペースト時のイベントで改行削除処理をしてるっぽいのでstop
-                event.stopPropagation();
-            };
-
-            procPositiveAndNegative(
-                () => addEvent(promptTextarea!, 'paste', 'pasteEventAdded', stopPropagationPaste),
-                () =>
-                    addEvent(
-                        promptNegativeTextarea!,
-                        'paste',
-                        'pasteEventAdded',
-                        stopPropagationPaste,
-                    ),
-            );
-        };
-        pasteNewline && enablePasteNewline();
-
         const procAddShortcuts = () => {
             const addShortcutsToPromptArea = (
                 promptArea: HTMLTextAreaElement,
@@ -83,12 +63,12 @@ export const costomizePromptArea = ({
                     shortcutMoveLine && moveLine(keyEvent, promptAreaDiv);
                 };
 
-                const handleInput = (inputEvent: InputEvent) => {
+                const handleAutoBracketInput = (inputEvent: InputEvent) => {
                     shortcutAutoBracket && autoBracket(inputEvent, promptAreaDiv);
                 };
 
                 addEvent(promptArea, 'keydown', 'shortcutsAdded', handleShortcuts);
-                addEvent(promptArea, 'beforeinput', 'beforeInputAdded', handleInput);
+                addEvent(promptArea, 'beforeinput', 'beforeInputAdded', handleAutoBracketInput);
             };
 
             procPositiveAndNegative(
@@ -101,6 +81,34 @@ export const costomizePromptArea = ({
             );
         };
         procAddShortcuts();
+
+        const procAddEssntialEventHandler = () => {
+            const addEssntialEventHandler = (
+                promptArea: HTMLTextAreaElement,
+                promptAreaDiv: HTMLDivElement,
+            ) => {
+                const handleSimpleInput = (inputEvent: InputEvent) => {
+                    submitPrompt(inputEvent.target as HTMLTextAreaElement, promptAreaDiv);
+                };
+
+                const handlePaste = (event: ClipboardEvent) => {
+                    submitPrompt(event.target as HTMLTextAreaElement, promptAreaDiv);
+                };
+
+                addEvent(promptArea, 'input', 'simpleInputAdded', handleSimpleInput);
+                addEvent(promptArea, 'paste', 'pasteEventAdded', handlePaste);
+            };
+
+            procPositiveAndNegative(
+                () => addEssntialEventHandler(promptTextarea!, originalPromptAreaDiv!),
+                () =>
+                    addEssntialEventHandler(
+                        promptNegativeTextarea!,
+                        originalNegativePromptAreaDiv!,
+                    ),
+            );
+        };
+        procAddEssntialEventHandler();
     };
 
     new MutationObserver(proc).observe(document.body, { childList: true, subtree: true });
