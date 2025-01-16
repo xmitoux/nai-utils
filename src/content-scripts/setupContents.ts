@@ -20,6 +20,7 @@ export let generatedImage: HTMLImageElement | undefined;
 export let leftPaneDiv: HTMLDivElement | undefined;
 export let promptTextarea: HTMLTextAreaElement | undefined;
 export let originalPromptAreaDiv: HTMLDivElement | undefined;
+export let originalNegativePromptAreaDiv: HTMLDivElement | undefined;
 export let promptNegativeTextarea: HTMLTextAreaElement | undefined;
 export let imageSettings: HTMLDivElement | undefined;
 
@@ -29,8 +30,6 @@ export const setupContents = ({ highlightViewedHistory }: ExtensionSettings) => 
     observer.observe(document.body, { childList: true, subtree: true });
 
     function proc() {
-        console.log('setupContents');
-
         const buttons = [...document.querySelectorAll<HTMLButtonElement>('button')];
 
         const setupTextButtons = () => {
@@ -139,27 +138,28 @@ export const setupContents = ({ highlightViewedHistory }: ExtensionSettings) => 
         const setupPromptArea = () => {
             // 監視を一時停止！⏸️
             observer.disconnect();
-            console.log('setupPromptArea');
+
             // 元の要素を取得！🎯
             // const proseMirror = document.querySelector<HTMLDivElement>('.ProseMirror');
             const proseMirrorList = document.querySelectorAll<HTMLDivElement>('.ProseMirror');
             // すでにtextareaになってたら処理しない！🚫
-            if (!proseMirrorList || proseMirrorList.length === 0 || proseMirrorList.length === 3) {
+            if (!proseMirrorList || proseMirrorList.length === 0 || proseMirrorList.length >= 6) {
                 // 監視再開して終了！▶️
                 observer.observe(document.body, { childList: true, subtree: true });
                 return;
             }
             console.log({ proseMirrorList: proseMirrorList });
 
-            const proseMirror = proseMirrorList[0] as HTMLDivElement;
-            console.log({ proseMirror: proseMirror });
+            const promptAreaDiv = proseMirrorList[0] as HTMLDivElement;
+            console.log({ proseMirror: promptAreaDiv });
 
             // テキストを抽出して改行で結合！📝
-            const text = Array.from(proseMirror.querySelectorAll('p'))
+            const text = Array.from(promptAreaDiv.querySelectorAll('p'))
                 .map((p: HTMLParagraphElement) => p.textContent ?? '')
                 .join('\n');
             console.log({ text: text });
-            // すでにtextareaになってたら処理しない！🚫
+            // 画面表示序盤はtextが空なので処理しない！🚫
+            // もし普通にプロンプト欄が空の場合は知らん！入力して！
             if (!text) {
                 // 監視再開して終了！▶️
                 observer.observe(document.body, { childList: true, subtree: true });
@@ -167,8 +167,8 @@ export const setupContents = ({ highlightViewedHistory }: ExtensionSettings) => 
             }
 
             // 元の要素を透明に！🌫️
-            proseMirror.style.opacity = '0';
-            proseMirror.style.position = 'relative'; // 基準位置になるよ！
+            promptAreaDiv.style.opacity = '0';
+            promptAreaDiv.style.position = 'relative'; // 基準位置になるよ！
 
             // textarea作って重ねるよ！🎨
             const textarea = document.createElement('textarea');
@@ -180,20 +180,48 @@ export const setupContents = ({ highlightViewedHistory }: ExtensionSettings) => 
             textarea.style.left = '0';
             textarea.style.width = '100%';
 
+            const promptAreaDivNega = proseMirrorList[1] as HTMLDivElement;
+            console.log({ promptDivNega: promptAreaDivNega });
+
+            // テキストを抽出して改行で結合！📝
+            const textNega = Array.from(promptAreaDivNega.querySelectorAll('p'))
+                .map((p: HTMLParagraphElement) => p.textContent ?? '')
+                .join('\n');
+            console.log({ textNega: textNega });
+            // 画面表示序盤はtextが空なので処理しない！🚫
+            // もし普通にプロンプト欄が空の場合は知らん！入力して！
+            if (!textNega) {
+                // 監視再開して終了！▶️
+                observer.observe(document.body, { childList: true, subtree: true });
+                return;
+            }
+
+            // 元の要素を透明に！🌫️
+            promptAreaDivNega.style.opacity = '0';
+            promptAreaDivNega.style.position = 'relative'; // 基準位置になるよ！
+
+            // textarea作って重ねるよ！🎨
+            const textareaNega = document.createElement('textarea');
+            textareaNega.value = textNega;
+            textareaNega.className = 'ProseMirror';
+            // 絶対位置で重ねる！📌
+            textareaNega.style.position = 'absolute';
+            textareaNega.style.top = '0';
+            textareaNega.style.left = '0';
+            textareaNega.style.width = '100%';
+
             // textareaを追加！🔥
-            proseMirror.parentElement?.appendChild(textarea);
+            promptAreaDiv.parentElement?.appendChild(textarea);
+            promptAreaDivNega.parentElement?.appendChild(textareaNega);
 
             promptTextarea = textarea;
-            originalPromptAreaDiv = proseMirror;
+            promptNegativeTextarea = textareaNega;
+
+            originalPromptAreaDiv = promptAreaDiv;
+            originalNegativePromptAreaDiv = promptAreaDivNega;
 
             // 処理完了後に監視再開！▶️
             observer.observe(document.body, { childList: true, subtree: true });
-
-            // if (promptTextareaList[1]) {
-            //     // プロンプト2段表示の場合にこれでネガティブが取得できるが、
-            //     // そうでない場合でも見えない謎のテキストエリアが取得されるので注意
-            //     promptNegativeTextarea = promptTextareaList[1];
-            // }
         };
         setupPromptArea();
 

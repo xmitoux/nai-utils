@@ -1,8 +1,9 @@
 import {
     leftPaneDiv,
-    promptNegativeTextarea,
     promptTextarea,
+    promptNegativeTextarea,
     originalPromptAreaDiv,
+    originalNegativePromptAreaDiv,
 } from '@/content-scripts/setupContents';
 import { addEvent } from '@/utils';
 import { autoBracket, controlBracket } from './shortcutBracket';
@@ -32,22 +33,23 @@ export const costomizePromptArea = ({
         const resizePromptArea = () => {
             const updatePromptAreaStyle = (
                 promptArea: HTMLTextAreaElement,
-                originalPromptAreaDiv: HTMLDivElement,
+                promptAreaDiv: HTMLDivElement,
             ) => {
                 // 高さ固定かリサイズ可のどちらかを適用
                 // (固定時にリサイズも可にすると、リサイズ後即高さが戻る挙動になるため二者択一とする)
                 if (promptHeight > 0) {
                     promptArea.style.height = `${promptHeight}vh`;
-                    originalPromptAreaDiv.style.height = `${promptHeight}vh`;
+                    promptAreaDiv.style.height = `${promptHeight}vh`;
                 } else if (resizePromptHeight) {
                     promptArea.style.resize = 'vertical';
-                    originalPromptAreaDiv.style.height = 'vertical';
+                    promptAreaDiv.style.height = 'vertical';
                 }
             };
 
             procPositiveAndNegative(
                 () => updatePromptAreaStyle(promptTextarea!, originalPromptAreaDiv!),
-                () => updatePromptAreaStyle(promptNegativeTextarea!, originalPromptAreaDiv!),
+                () =>
+                    updatePromptAreaStyle(promptNegativeTextarea!, originalNegativePromptAreaDiv!),
             );
         };
         resizePromptArea();
@@ -72,14 +74,17 @@ export const costomizePromptArea = ({
         pasteNewline && enablePasteNewline();
 
         const procAddShortcuts = () => {
-            const addShortcutsToPromptArea = (promptArea: HTMLTextAreaElement) => {
+            const addShortcutsToPromptArea = (
+                promptArea: HTMLTextAreaElement,
+                promptAreaDiv: HTMLDivElement,
+            ) => {
                 const handleShortcuts = (keyEvent: KeyboardEvent) => {
-                    shortcutControlBracket && controlBracket(keyEvent);
-                    shortcutMoveLine && moveLine(keyEvent);
+                    shortcutControlBracket && controlBracket(keyEvent, promptAreaDiv);
+                    shortcutMoveLine && moveLine(keyEvent, promptAreaDiv);
                 };
 
                 const handleInput = (inputEvent: InputEvent) => {
-                    shortcutAutoBracket && autoBracket(inputEvent);
+                    shortcutAutoBracket && autoBracket(inputEvent, promptAreaDiv);
                 };
 
                 addEvent(promptArea, 'keydown', 'shortcutsAdded', handleShortcuts);
@@ -87,8 +92,12 @@ export const costomizePromptArea = ({
             };
 
             procPositiveAndNegative(
-                () => addShortcutsToPromptArea(promptTextarea!),
-                () => addShortcutsToPromptArea(promptNegativeTextarea!),
+                () => addShortcutsToPromptArea(promptTextarea!, originalPromptAreaDiv!),
+                () =>
+                    addShortcutsToPromptArea(
+                        promptNegativeTextarea!,
+                        originalNegativePromptAreaDiv!,
+                    ),
             );
         };
         procAddShortcuts();

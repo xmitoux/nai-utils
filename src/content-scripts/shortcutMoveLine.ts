@@ -1,6 +1,6 @@
 import { submitPrompt } from '@/utils';
 
-export const moveLine = (event: KeyboardEvent) => {
+export const moveLine = (event: KeyboardEvent, promptAreaDiv: HTMLDivElement) => {
     if (
         !(
             (event.ctrlKey || event.metaKey) &&
@@ -58,5 +58,5 @@ export const moveLine = (event: KeyboardEvent) => {
 
     targetTextarea.value = lines.join('\n');
     targetTextarea.setSelectionRange(selectionStart, selectionEnd);
-    submitPrompt(targetTextarea);
+    submitPrompt(targetTextarea, promptAreaDiv);
 };
