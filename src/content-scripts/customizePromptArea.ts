@@ -2,6 +2,7 @@ import {
     leftPaneDiv,
     promptNegativeTextarea,
     promptTextarea,
+    originalPromptAreaDiv,
 } from '@/content-scripts/setupContents';
 import { addEvent } from '@/utils';
 import { autoBracket, controlBracket } from './shortcutBracket';
@@ -29,19 +30,24 @@ export const costomizePromptArea = ({
 
         // プロンプト欄の高さを変更する
         const resizePromptArea = () => {
-            const updatePromptAreaStyle = (promptArea: HTMLTextAreaElement) => {
+            const updatePromptAreaStyle = (
+                promptArea: HTMLTextAreaElement,
+                originalPromptAreaDiv: HTMLDivElement,
+            ) => {
                 // 高さ固定かリサイズ可のどちらかを適用
                 // (固定時にリサイズも可にすると、リサイズ後即高さが戻る挙動になるため二者択一とする)
                 if (promptHeight > 0) {
                     promptArea.style.height = `${promptHeight}vh`;
+                    originalPromptAreaDiv.style.height = `${promptHeight}vh`;
                 } else if (resizePromptHeight) {
                     promptArea.style.resize = 'vertical';
+                    originalPromptAreaDiv.style.height = 'vertical';
                 }
             };
 
             procPositiveAndNegative(
-                () => updatePromptAreaStyle(promptTextarea!),
-                () => updatePromptAreaStyle(promptNegativeTextarea!),
+                () => updatePromptAreaStyle(promptTextarea!, originalPromptAreaDiv!),
+                () => updatePromptAreaStyle(promptNegativeTextarea!, originalPromptAreaDiv!),
             );
         };
         resizePromptArea();

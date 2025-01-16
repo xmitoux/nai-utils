@@ -19,6 +19,7 @@ export let overlay: HTMLDivElement | undefined;
 export let generatedImage: HTMLImageElement | undefined;
 export let leftPaneDiv: HTMLDivElement | undefined;
 export let promptTextarea: HTMLTextAreaElement | undefined;
+export let originalPromptAreaDiv: HTMLDivElement | undefined;
 export let promptNegativeTextarea: HTMLTextAreaElement | undefined;
 export let imageSettings: HTMLDivElement | undefined;
 
@@ -178,12 +179,12 @@ export const setupContents = ({ highlightViewedHistory }: ExtensionSettings) => 
             textarea.style.top = '0';
             textarea.style.left = '0';
             textarea.style.width = '100%';
-            textarea.style.height = '100%';
 
             // textareaを追加！🔥
             proseMirror.parentElement?.appendChild(textarea);
 
             promptTextarea = textarea;
+            originalPromptAreaDiv = proseMirror;
 
             // 処理完了後に監視再開！▶️
             observer.observe(document.body, { childList: true, subtree: true });
