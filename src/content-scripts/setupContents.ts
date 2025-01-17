@@ -133,91 +133,71 @@ export const setupContents = ({ highlightViewedHistory }: ExtensionSettings) => 
         setupLeftPaneDiv();
 
         const setupPromptArea = () => {
-            // 監視を一時停止！⏸️
+            // 監視を一時停止
             observer.disconnect();
 
-            // 元の要素を取得！🎯
-            // const proseMirror = document.querySelector<HTMLDivElement>('.ProseMirror');
-            const proseMirrorList = document.querySelectorAll<HTMLDivElement>('.ProseMirror');
-            // すでにtextareaになってたら処理しない！🚫
-            if (!proseMirrorList || proseMirrorList.length === 0 || proseMirrorList.length >= 6) {
-                // 監視再開して終了！▶️
-                observer.observe(document.body, { childList: true, subtree: true });
-                return;
-            }
-            console.log({ proseMirrorList: proseMirrorList });
+            // divプロンプトエリアのclass名
+            const promptAreaClassName = 'ProseMirror';
 
-            const promptAreaDiv = proseMirrorList[0] as HTMLDivElement;
-            console.log({ proseMirror: promptAreaDiv });
-
-            // テキストを抽出して改行で結合！📝
-            const text = Array.from(promptAreaDiv.querySelectorAll('p'))
-                .map((p: HTMLParagraphElement) => p.textContent ?? '')
-                .join('\n');
-            console.log({ text: text });
-            // 画面表示序盤はtextが空なので処理しない！🚫
-            // もし普通にプロンプト欄が空の場合は知らん！入力して！
-            if (!text) {
-                // 監視再開して終了！▶️
+            // divプロンプトエリアを探す
+            const promptAreaElements = document.querySelectorAll<HTMLDivElement>(
+                '.' + promptAreaClassName,
+            );
+            if (
+                !promptAreaElements ||
+                promptAreaElements.length === 0 ||
+                // 通常/ネガ2つ * 謎の2つ + 作成した疑似テキストエリア2つ = 6個 ができてたらもう処理しない
+                promptAreaElements.length >= 6
+            ) {
                 observer.observe(document.body, { childList: true, subtree: true });
                 return;
             }
 
-            // 元の要素を透明に！🌫️
-            promptAreaDiv.style.opacity = '0';
-            promptAreaDiv.style.position = 'relative'; // 基準位置になるよ！
+            // 疑似プロンプトエリア(textarea)の設定を行う関数
+            // (NAI側の仕様変更でdivに変わったのでその対応
+            // textareaを用意することで、各機能を大きな修正なしで今まで通り動作させる)
+            const setupTextArea = (originalDiv: HTMLDivElement): HTMLTextAreaElement | null => {
+                // divプロンプトエリアの各プロンプトはpタグなので全て結合して扱う
+                const prompt = Array.from(originalDiv.querySelectorAll('p'))
+                    .map((p: HTMLParagraphElement) => p.textContent ?? '')
+                    .join('\n');
 
-            // textarea作って重ねるよ！🎨
-            const textarea = document.createElement('textarea');
-            textarea.value = text;
-            textarea.className = 'ProseMirror';
-            // 絶対位置で重ねる！📌
-            textarea.style.position = 'absolute';
-            textarea.style.top = '0';
-            textarea.style.left = '0';
-            textarea.style.width = '100%';
+                // 要素があっても監視序盤はプロンプトが取れない場合があるのでそのときは処理をやめる
+                // ⚠ 普通にプロンプトエリアが空の場合は動作しなくなる！ ⚠
+                if (!prompt) return null;
 
-            const promptAreaDivNega = proseMirrorList[1] as HTMLDivElement;
-            console.log({ promptDivNega: promptAreaDivNega });
+                // divプロンプトエリアを透明にするスタイル設定
+                originalDiv.style.opacity = '0';
+                originalDiv.style.position = 'relative';
 
-            // テキストを抽出して改行で結合！📝
-            const textNega = Array.from(promptAreaDivNega.querySelectorAll('p'))
-                .map((p: HTMLParagraphElement) => p.textContent ?? '')
-                .join('\n');
-            console.log({ textNega: textNega });
-            // 画面表示序盤はtextが空なので処理しない！🚫
-            // もし普通にプロンプト欄が空の場合は知らん！入力して！
-            if (!textNega) {
-                // 監視再開して終了！▶️
-                observer.observe(document.body, { childList: true, subtree: true });
-                return;
+                // 新しいtextareaの作成と設定
+                const textarea = document.createElement('textarea');
+                textarea.value = prompt;
+                textarea.className = promptAreaClassName;
+                textarea.style.position = 'absolute';
+                textarea.style.top = '0';
+                textarea.style.left = '0';
+                textarea.style.width = '100%';
+
+                // 疑似プロンプトエリアをdivプロンプトエリアに重ねる
+                originalDiv.parentElement?.appendChild(textarea);
+                return textarea;
+            };
+
+            // 疑似通常プロンプトエリアの設定
+            const mainTextarea = setupTextArea(promptAreaElements[0]);
+            // 疑似ネガティブプロンプトエリアの設定
+            const negativeTextarea = setupTextArea(promptAreaElements[1]);
+
+            if (mainTextarea && negativeTextarea) {
+                // 他の機能でも使うのでexport
+                promptTextarea = mainTextarea;
+                promptNegativeTextarea = negativeTextarea;
+                originalPromptAreaDiv = promptAreaElements[0];
+                originalNegativePromptAreaDiv = promptAreaElements[1];
             }
 
-            // 元の要素を透明に！🌫️
-            promptAreaDivNega.style.opacity = '0';
-            promptAreaDivNega.style.position = 'relative'; // 基準位置になるよ！
-
-            // textarea作って重ねるよ！🎨
-            const textareaNega = document.createElement('textarea');
-            textareaNega.value = textNega;
-            textareaNega.className = 'ProseMirror';
-            // 絶対位置で重ねる！📌
-            textareaNega.style.position = 'absolute';
-            textareaNega.style.top = '0';
-            textareaNega.style.left = '0';
-            textareaNega.style.width = '100%';
-
-            // textareaを追加！🔥
-            promptAreaDiv.parentElement?.appendChild(textarea);
-            promptAreaDivNega.parentElement?.appendChild(textareaNega);
-
-            promptTextarea = textarea;
-            promptNegativeTextarea = textareaNega;
-
-            originalPromptAreaDiv = promptAreaDiv;
-            originalNegativePromptAreaDiv = promptAreaDivNega;
-
-            // 処理完了後に監視再開！▶️
+            // 監視を再開
             observer.observe(document.body, { childList: true, subtree: true });
         };
         setupPromptArea();
