@@ -133,7 +133,7 @@ export const setupContents = ({ highlightViewedHistory }: ExtensionSettings) => 
         setupLeftPaneDiv();
 
         const setupPromptArea = () => {
-            // 監視を一時停止
+            // 監視を一時停止(以降の疑似プロンプトエリア作成でobserverが発火しないように)
             observer.disconnect();
 
             // divプロンプトエリアのclass名
@@ -143,12 +143,15 @@ export const setupContents = ({ highlightViewedHistory }: ExtensionSettings) => 
             const promptAreaElements = document.querySelectorAll<HTMLDivElement>(
                 '.' + promptAreaClassName,
             );
+
             if (
                 !promptAreaElements ||
                 promptAreaElements.length === 0 ||
-                // 通常/ネガ2つ * 謎の2つ + 作成した疑似テキストエリア2つ = 6個 ができてたらもう処理しない
-                promptAreaElements.length >= 6
+                Array.from(promptAreaElements)
+                    .map((el) => el.tagName.toLowerCase())
+                    .includes('textarea')
             ) {
+                // 既に疑似プロンプトエリアを作成済みの場合は何もせず監視を続ける
                 observer.observe(document.body, { childList: true, subtree: true });
                 return;
             }
