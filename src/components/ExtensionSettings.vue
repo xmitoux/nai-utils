@@ -76,10 +76,6 @@ const changePromptHeight = () => {
                     />
                 </ElFormItem>
 
-                <ElFormItem label="プロンプト貼り付け時に改行を保持する">
-                    <ElSwitch v-model="currentSettings.pasteNewline" @change="saveSettings" />
-                </ElFormItem>
-
                 <ElFormItem label='"{ }" / "[ ]" を自動で閉じる'>
                     <ElSwitch
                         v-model="currentSettings.shortcutAutoBracket"

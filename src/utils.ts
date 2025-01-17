@@ -16,7 +16,6 @@ export const defaultExtensionSettings: ExtensionSettings = {
     resizePromptHeight: false,
     importImageWithoutConfirm: false,
     rearrangeImageSettings: false,
-    pasteNewline: false,
     shortcutControlBracket: false,
     shortcutAutoBracket: false,
     shortcutMoveLine: false,
