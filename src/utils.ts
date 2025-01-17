@@ -64,3 +64,30 @@ export const submitPrompt = (
         promptAreaDiv.appendChild(p);
     });
 };
+
+/** PromptAreaDivのテキストを取得し疑似プロンプトエリアに挿入する */
+export const submitPromptFromOriginalPromptAreaDiv = (
+    promptTextarea: HTMLTextAreaElement,
+    promptAreaDiv: HTMLDivElement,
+) => {
+    if (!promptAreaDiv) {
+        console.error('プロンプト入力欄がない😢');
+        return '';
+    }
+
+    const prompt = getPromptAreaDivText(promptAreaDiv!);
+    promptTextarea.value = prompt;
+};
+
+/** PromptAreaDivのテキストを取得する */
+export const getPromptAreaDivText = (promptAreaDiv: HTMLDivElement): string => {
+    if (!promptAreaDiv) {
+        console.error('プロンプト入力欄がない😢');
+        return '';
+    }
+
+    // pタグを改行区切りの文字列に変換
+    return Array.from(promptAreaDiv.querySelectorAll<HTMLParagraphElement>('p'))
+        .map((p) => p.textContent ?? '')
+        .join('\n');
+};

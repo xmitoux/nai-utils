@@ -14,3 +14,5 @@ export const BUTTON_TEXT_IMPORT_IMAGE_EN = 'Import Image';
 export const BUTTON_TEXT_IMPORT_IMAGE_JA = '画像をインポート';
 export const DIV_TEXT_IMAGE_SETTINGS_EN = 'Image Settings';
 export const DIV_TEXT_IMAGE_SETTINGS_JA = '画像設定';
+export const BUTTON_TEXT_IMPORT_METADATA_EN = 'Import Metadata';
+export const BUTTON_TEXT_IMPORT_METADATA_JA = 'メタデータをインポート';
