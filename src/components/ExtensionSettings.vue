@@ -180,13 +180,6 @@ const settingAll = (flag: boolean) => {
                     <ElSwitch v-model="currentSettings.confirmDialog" @change="saveSettings" />
                 </ElFormItem>
 
-                <ElFormItem label="画像読込時、自動で「画像のインポート」を選択する">
-                    <ElSwitch
-                        v-model="currentSettings.importImageWithoutConfirm"
-                        @change="saveSettings"
-                    />
-                </ElFormItem>
-
                 <ElFormItem label="生成完了時に音を鳴らす">
                     <ElSwitch v-model="currentSettings.generatedSound" @change="saveSettings" />
                 </ElFormItem>

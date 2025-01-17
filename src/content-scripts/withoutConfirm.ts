@@ -1,13 +1,6 @@
-import {
-    BUTTON_TEXT_DELETE_HISTORY,
-    BUTTON_TEXT_IMPORT_IMAGE_EN,
-    BUTTON_TEXT_IMPORT_IMAGE_JA,
-} from '@/constants/nai';
+import { BUTTON_TEXT_DELETE_HISTORY } from '@/constants/nai';
 
-export const withoutConfirm = ({
-    enableDeleteHistoryWithoutConfirm,
-    importImageWithoutConfirm,
-}: ExtensionSettings) => {
+export const withoutConfirm = ({ enableDeleteHistoryWithoutConfirm }: ExtensionSettings) => {
     const proc = () => {
         const buttons = document.querySelectorAll('button');
 
@@ -15,14 +8,6 @@ export const withoutConfirm = ({
             if (
                 enableDeleteHistoryWithoutConfirm &&
                 button.textContent === BUTTON_TEXT_DELETE_HISTORY
-            ) {
-                button.click();
-            }
-
-            if (
-                importImageWithoutConfirm &&
-                (button.textContent === BUTTON_TEXT_IMPORT_IMAGE_EN ||
-                    button.textContent === BUTTON_TEXT_IMPORT_IMAGE_JA)
             ) {
                 button.click();
             }
