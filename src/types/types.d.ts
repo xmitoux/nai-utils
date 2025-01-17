@@ -5,6 +5,7 @@ type ExtensionSettings = {
     enableDeleteHistoryWithoutConfirm: boolean;
     enableHistorySaveShortcut: boolean;
     hideModelSelector: boolean;
+    hideDirectorTools: boolean;
     shrinkPromptArea: boolean;
     wheelHistory: boolean;
     highlightViewedHistory: boolean;

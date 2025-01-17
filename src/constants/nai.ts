@@ -14,3 +14,5 @@ export const DIV_TEXT_IMAGE_SETTINGS_EN = 'Image Settings';
 export const DIV_TEXT_IMAGE_SETTINGS_JA = '画像設定';
 export const BUTTON_TEXT_IMPORT_METADATA_EN = 'Import Metadata';
 export const BUTTON_TEXT_IMPORT_METADATA_JA = 'メタデータをインポート';
+export const BUTTON_TEXT_DIRECTOR_TOOLS_EN = 'Director Tools';
+export const BUTTON_TEXT_DIRECTOR_TOOLS_JA = 'ディレクターツール';

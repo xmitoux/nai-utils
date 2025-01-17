@@ -1,15 +1,6 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue';
-import {
-    ElButton,
-    ElCol,
-    ElForm,
-    ElFormItem,
-    ElInputNumber,
-    ElRow,
-    ElSwitch,
-    ElTooltip,
-} from 'element-plus';
+import { ref, onMounted } from 'vue';
+import { ElButton, ElCol, ElForm, ElFormItem, ElInputNumber, ElRow, ElSwitch } from 'element-plus';
 import { ACTION_UPDATE_SETTINGS } from '@/constants/chrome-api';
 import { NAI_URL } from '@/constants/nai';
 import { defaultExtensionSettings } from '@/utils';
@@ -156,6 +147,10 @@ const settingAll = (flag: boolean) => {
 
                 <ElFormItem label="モデル選択ボックスを非表示にする">
                     <ElSwitch v-model="currentSettings.hideModelSelector" @change="saveSettings" />
+                </ElFormItem>
+
+                <ElFormItem label="Director Toolsを非表示にする">
+                    <ElSwitch v-model="currentSettings.hideDirectorTools" @change="saveSettings" />
                 </ElFormItem>
             </ElForm>
         </ElCol>

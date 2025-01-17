@@ -9,6 +9,7 @@ import { addSliderButton } from './content-scripts/addSliderButton';
 import { costomizePromptArea } from './content-scripts/customizePromptArea';
 import { rearrangeImageSettings } from './content-scripts/rearrangeImageSettings';
 import { handleButonEvents } from './content-scripts/handleButonEvents';
+import { removeDirectorTools } from './content-scripts/removeDirectorTools';
 
 // ページ読み込み時に設定を取得する
 chrome.runtime.sendMessage({ action: ACTION_GET_SETTINGS }, (response) => {
@@ -30,5 +31,9 @@ chrome.runtime.sendMessage({ action: ACTION_GET_SETTINGS }, (response) => {
 
     if (extensionSettings.hideModelSelector) {
         noModelSelector();
+    }
+
+    if (extensionSettings.hideDirectorTools) {
+        removeDirectorTools();
     }
 });
