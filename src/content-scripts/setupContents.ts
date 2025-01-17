@@ -9,6 +9,7 @@ import {
     DIV_TEXT_IMAGE_SETTINGS_EN,
     DIV_TEXT_IMAGE_SETTINGS_JA,
 } from '@/constants/nai';
+import { getElementsByStyle } from '@/utils';
 
 export let generateButton: HTMLButtonElement | undefined;
 export let upscaleButtonText: HTMLButtonElement | undefined;
@@ -119,19 +120,15 @@ export const setupContents = ({ highlightViewedHistory }: ExtensionSettings) => 
         highlightViewedHistory && setupViewedHighlightOverlay();
 
         const setupLeftPaneDiv = () => {
-            // ホームボタン要素を取得
-            const anchorElement = document.querySelector<HTMLAnchorElement>('a[href="/stories"]');
-            if (!anchorElement) {
-                return;
-            }
+            const targetStyle = 'cursor: e-resize;';
 
-            // 親要素を取得
-            const anchorGrandParent = anchorElement.parentElement?.parentElement;
-            if (!anchorGrandParent) {
-                return;
-            }
+            const targets = getElementsByStyle(targetStyle);
+            if (!targets.length) return;
 
-            leftPaneDiv = anchorGrandParent as HTMLDivElement;
+            const target = targets[0].parentElement;
+            if (!target) return;
+
+            leftPaneDiv = target as HTMLDivElement;
         };
         setupLeftPaneDiv();
 
