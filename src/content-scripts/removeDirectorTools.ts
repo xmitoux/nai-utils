@@ -2,8 +2,6 @@ import { BUTTON_TEXT_DIRECTOR_TOOLS_EN, BUTTON_TEXT_DIRECTOR_TOOLS_JA } from '@/
 
 // Director Toolsボタンを非表示にする
 export const removeDirectorTools = () => {
-    const observer = new MutationObserver(proc);
-
     function proc() {
         const buttons = document.querySelectorAll('button');
         const target = Array.from(buttons).find(
@@ -14,9 +12,10 @@ export const removeDirectorTools = () => {
 
         if (!target) return;
 
-        target.style.display = 'none';
-        observer.disconnect();
+        if (target.style.display !== 'none') {
+            target.style.display = 'none';
+        }
     }
 
-    observer.observe(document.body, { childList: true, subtree: true });
+    new MutationObserver(proc).observe(document.body, { childList: true, subtree: true });
 };

@@ -1,7 +1,6 @@
 import { getElementsByStyle } from '@/utils';
 
 export const noModelSelector = () => {
-    const observer = new MutationObserver(proc);
     function proc() {
         const targetStyle =
             'display: flex; flex-direction: row; justify-content: space-between; width: 100%; padding: 10px';
@@ -12,9 +11,10 @@ export const noModelSelector = () => {
         const target = targets[0].parentElement;
         if (!target) return;
 
-        target.style.display = 'none';
-        observer.disconnect();
+        if (target.style.display !== 'none') {
+            target.style.display = 'none';
+        }
     }
 
-    observer.observe(document.body, { childList: true, subtree: true });
+    new MutationObserver(proc).observe(document.body, { childList: true, subtree: true });
 };
