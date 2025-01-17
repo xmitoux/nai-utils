@@ -39,6 +39,23 @@ export const handleButonEvents = () => {
                 // Import Metadataボタンにイベントハンドラを追加
                 addEvent(button, 'click', 'metadataImportAdded', handleImportMetadata);
             }
+
+            // Naildcard
+            if (button.textContent === '🎲') {
+                // 取り込んだプロンプトを擬似プロンプトエリアに反映する
+                const handleNaildcard = () => {
+                    // ボタンクリック直後はpromptAreaDivに反映されてないことがあるのでちょっと待つ
+                    setTimeout(() => {
+                        submitPromptFromOriginalPromptAreaDiv(
+                            promptTextarea!,
+                            originalPromptAreaDiv!,
+                        );
+                    }, 10);
+                };
+
+                // Import Metadataボタンにイベントハンドラを追加
+                addEvent(button, 'click', 'naildcardHandlerAdded', handleNaildcard);
+            }
         });
     };
 
