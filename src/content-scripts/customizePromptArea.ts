@@ -12,7 +12,6 @@ import { moveLine } from './shortcutMoveLine';
 export const costomizePromptArea = ({
     promptWidth,
     promptHeight,
-    resizePromptHeight,
     shortcutControlBracket,
     shortcutAutoBracket,
     shortcutMoveLine,
@@ -34,14 +33,9 @@ export const costomizePromptArea = ({
                 promptArea: HTMLTextAreaElement,
                 promptAreaDiv: HTMLDivElement,
             ) => {
-                // 高さ固定かリサイズ可のどちらかを適用
-                // (固定時にリサイズも可にすると、リサイズ後即高さが戻る挙動になるため二者択一とする)
                 if (promptHeight > 0) {
                     promptArea.style.height = `${promptHeight}vh`;
                     promptAreaDiv.style.height = `${promptHeight}vh`;
-                } else if (resizePromptHeight) {
-                    promptArea.style.resize = 'vertical';
-                    promptAreaDiv.style.height = 'vertical';
                 }
             };
 

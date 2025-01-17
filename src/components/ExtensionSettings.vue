@@ -40,18 +40,6 @@ const settingAll = (flag: boolean) => {
         }
     });
 
-    // リサイズ設定は高さ変更と二者択一のためONにしない
-    currentSettings.value.resizePromptHeight = false;
-
-    saveSettings();
-};
-
-const enablePromptHeight = computed(() => currentSettings.value.promptHeight > 0);
-const changePromptHeight = () => {
-    if (enablePromptHeight.value) {
-        // プロンプトの高さ設定をする場合はリサイズは設定不可
-        currentSettings.value.resizePromptHeight = false;
-    }
     saveSettings();
 };
 </script>
@@ -103,23 +91,8 @@ const changePromptHeight = () => {
                         :max="80"
                         size="small"
                         :step="10"
-                        @change="changePromptHeight"
+                        @change="saveSettings"
                     />
-                </ElFormItem>
-
-                <ElFormItem label="プロンプト欄の高さをリサイズ可能にする">
-                    <ElTooltip
-                        :disabled="!enablePromptHeight"
-                        effect="dark"
-                        content="プロンプト欄の高さを変更する場合は設定できません。"
-                        placement="top"
-                    >
-                        <ElSwitch
-                            v-model="currentSettings.resizePromptHeight"
-                            :disabled="enablePromptHeight"
-                            @change="saveSettings"
-                        />
-                    </ElTooltip>
                 </ElFormItem>
             </ElForm>
         </ElCol>

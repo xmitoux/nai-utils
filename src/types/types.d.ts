@@ -13,7 +13,6 @@ type ExtensionSettings = {
     generatedSound: boolean;
     promptWidth: number;
     promptHeight: number;
-    resizePromptHeight: boolean;
     importImageWithoutConfirm: boolean;
     rearrangeImageSettings: boolean;
     shortcutControlBracket: boolean;

@@ -13,7 +13,6 @@ export const defaultExtensionSettings: ExtensionSettings = {
     generatedSound: false,
     promptWidth: 0,
     promptHeight: 0,
-    resizePromptHeight: false,
     importImageWithoutConfirm: false,
     rearrangeImageSettings: false,
     shortcutControlBracket: false,
