@@ -90,3 +90,50 @@ export const getPromptAreaDivText = (promptAreaDiv: HTMLDivElement): string => {
         .map((p) => p.textContent ?? '')
         .join('\n');
 };
+
+interface StyleProperties {
+    [key: string]: string;
+}
+
+/** 要素をstyleで検索して取得する */
+export function getElementsByStyle(styles: string): HTMLElement[] {
+    const allElements = document.getElementsByTagName('*');
+    const matchingElements: HTMLElement[] = [];
+
+    function normalizeStyle(style: string): StyleProperties {
+        return style
+            .split(';')
+            .filter((s) => s.trim())
+            .reduce((acc: StyleProperties, style) => {
+                const [property, value] = style.split(':').map((s) => s.trim());
+                if (property && value) {
+                    // プロパティ名をキャメルケースに変換
+                    const normalizedProperty = property.replace(/-([a-z])/g, (_, letter) =>
+                        letter.toUpperCase(),
+                    );
+                    acc[normalizedProperty] = value;
+                }
+                return acc;
+            }, {});
+    }
+
+    const targetStyles = normalizeStyle(styles);
+
+    Array.from(allElements).forEach((element) => {
+        if (!element.hasAttribute('style')) return;
+
+        const elementStyle = element.getAttribute('style') || '';
+        const currentStyles = normalizeStyle(elementStyle);
+
+        // すべてのターゲットスタイルが要素のスタイルに含まれているかチェック
+        const matches = Object.entries(targetStyles).every(([property, value]) => {
+            return currentStyles[property] === value;
+        });
+
+        if (matches) {
+            matchingElements.push(element as HTMLElement);
+        }
+    });
+
+    return matchingElements;
+}
