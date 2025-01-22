@@ -48,13 +48,6 @@ const settingAll = (flag: boolean) => {
         <ElCol :span="8">
             <h2>📜プロンプト欄設定</h2>
             <ElForm label-position="left" label-width="375px">
-                <ElFormItem label="Enterキーによる生成を無効化する">
-                    <ElSwitch
-                        v-model="currentSettings.disableEnterKeyGeneration"
-                        @change="saveSettings"
-                    />
-                </ElFormItem>
-
                 <ElFormItem label='"{ }" / "[ ]" を自動で閉じる'>
                     <ElSwitch
                         v-model="currentSettings.shortcutAutoBracket"

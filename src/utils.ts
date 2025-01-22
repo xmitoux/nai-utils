@@ -1,5 +1,4 @@
 export const defaultExtensionSettings: ExtensionSettings = {
-    disableEnterKeyGeneration: false,
     generateEverywhere: false,
     datetimeFilename: false,
     hideModelSelector: false,
@@ -58,7 +57,16 @@ export const submitPrompt = (
     const lines = promptTextarea.value.split('\n');
     lines.forEach((line) => {
         const p = document.createElement('p');
-        p.textContent = line;
+        if (line.trim() === '') {
+            // 空行の場合はdivプロンプトエリアの動作と同様brタグを追加
+            // (必要かは不明だが念のため)
+            const br = document.createElement('br');
+            br.className = 'ProseMirror-trailingBreak';
+            p.appendChild(br);
+        } else {
+            // 通常の行の場合は今まで通り
+            p.textContent = line;
+        }
         promptAreaDiv.appendChild(p);
     });
 };

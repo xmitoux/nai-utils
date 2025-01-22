@@ -9,7 +9,7 @@ import {
     DIV_TEXT_IMAGE_SETTINGS_EN,
     DIV_TEXT_IMAGE_SETTINGS_JA,
 } from '@/constants/nai';
-import { getElementsByStyle } from '@/utils';
+import { addEvent, getElementsByStyle, submitPrompt } from '@/utils';
 
 export let generateButton: HTMLButtonElement | undefined;
 export let upscaleButtonText: HTMLButtonElement | undefined;
@@ -223,6 +223,23 @@ export const setupContents = ({ highlightViewedHistory }: ExtensionSettings) => 
             }
         };
         setupImageSettings();
+
+        // プロンプト確定処理を追加する
+        const procSubmitPrompt = () => {
+            const handleSubmitPrompt = () => {
+                submitPrompt(promptTextarea!, originalPromptAreaDiv!);
+                submitPrompt(promptNegativeTextarea!, originalNegativePromptAreaDiv!);
+            };
+
+            // 生成ボタンにプロンプト確定処理を追加
+            // - エンター生成を封じるための対応
+            // - 元はプロンプトエリアのinputで確定するようにしていたが、
+            //   そうするとエンター生成を防げなくなってしまったので生成時点で初めて確定する
+            // - したがって、プロンプトをinputし、生成前にinpaintなどで画面が切り替わると
+            //   プロンプトが確定されず元に戻るが、どうしようもない
+            addEvent(generateButton!, 'click', 'submitPromptAdded', handleSubmitPrompt);
+        };
+        procSubmitPrompt();
     }
 };
 

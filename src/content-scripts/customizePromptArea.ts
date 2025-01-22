@@ -81,15 +81,9 @@ export const costomizePromptArea = ({
                 promptArea: HTMLTextAreaElement,
                 promptAreaDiv: HTMLDivElement,
             ) => {
-                const handleSimpleInput = (inputEvent: InputEvent) => {
-                    submitPrompt(inputEvent.target as HTMLTextAreaElement, promptAreaDiv);
-                };
-
                 const handlePaste = (event: ClipboardEvent) => {
                     submitPrompt(event.target as HTMLTextAreaElement, promptAreaDiv);
                 };
-
-                addEvent(promptArea, 'input', 'simpleInputAdded', handleSimpleInput);
                 addEvent(promptArea, 'paste', 'pasteEventAdded', handlePaste);
             };
 
