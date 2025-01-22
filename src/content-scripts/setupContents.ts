@@ -23,7 +23,13 @@ export let promptNegativeTextarea: HTMLTextAreaElement | undefined;
 export let imageSettings: HTMLDivElement | undefined;
 
 export const setupContents = ({ highlightViewedHistory }: ExtensionSettings) => {
-    const proc = () => {
+    // inpaint等で画面が切り替わるとイベントリスナが破壊されるので監視して登録
+    const observer = new MutationObserver(proc);
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    function proc() {
+        console.log('setupContents');
+
         const buttons = [...document.querySelectorAll<HTMLButtonElement>('button')];
 
         const setupTextButtons = () => {
@@ -130,18 +136,63 @@ export const setupContents = ({ highlightViewedHistory }: ExtensionSettings) => 
         setupLeftPaneDiv();
 
         const setupPromptArea = () => {
-            const promptTextareaList = document.querySelectorAll<HTMLTextAreaElement>('textarea');
-            if (!promptTextareaList.length) {
+            // 監視を一時停止！⏸️
+            observer.disconnect();
+            console.log('setupPromptArea');
+            // 元の要素を取得！🎯
+            // const proseMirror = document.querySelector<HTMLDivElement>('.ProseMirror');
+            const proseMirrorList = document.querySelectorAll<HTMLDivElement>('.ProseMirror');
+            // すでにtextareaになってたら処理しない！🚫
+            if (!proseMirrorList || proseMirrorList.length === 0 || proseMirrorList.length === 3) {
+                // 監視再開して終了！▶️
+                observer.observe(document.body, { childList: true, subtree: true });
+                return;
+            }
+            console.log({ proseMirrorList: proseMirrorList });
+
+            const proseMirror = proseMirrorList[0] as HTMLDivElement;
+            console.log({ proseMirror: proseMirror });
+
+            // テキストを抽出して改行で結合！📝
+            const text = Array.from(proseMirror.querySelectorAll('p'))
+                .map((p: HTMLParagraphElement) => p.textContent ?? '')
+                .join('\n');
+            console.log({ text: text });
+            // すでにtextareaになってたら処理しない！🚫
+            if (!text) {
+                // 監視再開して終了！▶️
+                observer.observe(document.body, { childList: true, subtree: true });
                 return;
             }
 
-            promptTextarea = promptTextareaList[0] as HTMLTextAreaElement;
+            // 元の要素を透明に！🌫️
+            proseMirror.style.opacity = '0';
+            proseMirror.style.position = 'relative'; // 基準位置になるよ！
 
-            if (promptTextareaList[1]) {
-                // プロンプト2段表示の場合にこれでネガティブが取得できるが、
-                // そうでない場合でも見えない謎のテキストエリアが取得されるので注意
-                promptNegativeTextarea = promptTextareaList[1];
-            }
+            // textarea作って重ねるよ！🎨
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.className = 'ProseMirror';
+            // 絶対位置で重ねる！📌
+            textarea.style.position = 'absolute';
+            textarea.style.top = '0';
+            textarea.style.left = '0';
+            textarea.style.width = '100%';
+            textarea.style.height = '100%';
+
+            // textareaを追加！🔥
+            proseMirror.parentElement?.appendChild(textarea);
+
+            promptTextarea = textarea;
+
+            // 処理完了後に監視再開！▶️
+            observer.observe(document.body, { childList: true, subtree: true });
+
+            // if (promptTextareaList[1]) {
+            //     // プロンプト2段表示の場合にこれでネガティブが取得できるが、
+            //     // そうでない場合でも見えない謎のテキストエリアが取得されるので注意
+            //     promptNegativeTextarea = promptTextareaList[1];
+            // }
         };
         setupPromptArea();
 
@@ -163,10 +214,7 @@ export const setupContents = ({ highlightViewedHistory }: ExtensionSettings) => 
             }
         };
         setupImageSettings();
-    };
-
-    // inpaint等で画面が切り替わるとイベントリスナが破壊されるので監視して登録
-    new MutationObserver(proc).observe(document.body, { childList: true, subtree: true });
+    }
 };
 
 const setupIconButton = (

@@ -45,8 +45,25 @@ export const addEvent = <T extends Event>(
 };
 
 export const submitPrompt = (promptTextarea: HTMLTextAreaElement) => {
-    // プロンプト欄のReactコンポーネントのinputイベントを発火させてテキスト入力を確定させる
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (promptTextarea as any)._valueTracker = '';
-    promptTextarea.dispatchEvent(new Event('input', { bubbles: true }));
+    const promptAreaDiv = document.querySelector<HTMLDivElement>('.ProseMirror');
+    if (!promptAreaDiv) {
+        console.error('プロンプト入力欄がない😢');
+        return;
+    }
+
+    // プロンプト入力のたびに中身をクリアする
+    promptAreaDiv.innerHTML = '';
+    console.log({ 'promptTextarea.value': promptTextarea.value });
+
+    // プロンプトの各行をp要素として追加していく
+    const lines = promptTextarea.value.split('\n');
+    lines.forEach((line) => {
+        const p = document.createElement('p');
+        p.textContent = line;
+        promptAreaDiv.appendChild(p);
+    });
+    // // プロンプト欄のReactコンポーネントのinputイベントを発火させてテキスト入力を確定させる
+    // // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // (promptTextarea as any)._valueTracker = '';
+    // promptTextarea.dispatchEvent(new Event('input', { bubbles: true }));
 };
