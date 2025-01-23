@@ -1,10 +1,10 @@
 type ExtensionSettings = {
-    disableEnterKeyGeneration: boolean;
     generateEverywhere: boolean;
     datetimeFilename: boolean;
     enableDeleteHistoryWithoutConfirm: boolean;
     enableHistorySaveShortcut: boolean;
     hideModelSelector: boolean;
+    hideDirectorTools: boolean;
     shrinkPromptArea: boolean;
     wheelHistory: boolean;
     highlightViewedHistory: boolean;
@@ -13,11 +13,9 @@ type ExtensionSettings = {
     generatedSound: boolean;
     promptWidth: number;
     promptHeight: number;
-    resizePromptHeight: boolean;
-    importImageWithoutConfirm: boolean;
     rearrangeImageSettings: boolean;
-    pasteNewline: boolean;
     shortcutControlBracket: boolean;
     shortcutAutoBracket: boolean;
     shortcutMoveLine: boolean;
+    enablePromptFeature: boolean;
 };

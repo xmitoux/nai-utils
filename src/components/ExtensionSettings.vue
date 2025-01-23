@@ -1,15 +1,6 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue';
-import {
-    ElButton,
-    ElCol,
-    ElForm,
-    ElFormItem,
-    ElInputNumber,
-    ElRow,
-    ElSwitch,
-    ElTooltip,
-} from 'element-plus';
+import { ref, onMounted, watchEffect } from 'vue';
+import { ElButton, ElCol, ElForm, ElFormItem, ElInputNumber, ElRow, ElSwitch } from 'element-plus';
 import { ACTION_UPDATE_SETTINGS } from '@/constants/chrome-api';
 import { NAI_URL } from '@/constants/nai';
 import { defaultExtensionSettings } from '@/utils';
@@ -40,20 +31,19 @@ const settingAll = (flag: boolean) => {
         }
     });
 
-    // リサイズ設定は高さ変更と二者択一のためONにしない
-    currentSettings.value.resizePromptHeight = false;
-
     saveSettings();
 };
 
-const enablePromptHeight = computed(() => currentSettings.value.promptHeight > 0);
-const changePromptHeight = () => {
-    if (enablePromptHeight.value) {
-        // プロンプトの高さ設定をする場合はリサイズは設定不可
-        currentSettings.value.resizePromptHeight = false;
-    }
-    saveSettings();
-};
+// プロンプト関連設定の状態に応じて各プロンプト関連設定を変更する
+watchEffect(() => {
+    const { enablePromptFeature } = currentSettings.value;
+    currentSettings.value.shortcutAutoBracket = enablePromptFeature;
+    currentSettings.value.promptWidth = enablePromptFeature ? 30 : 0;
+    currentSettings.value.promptHeight = enablePromptFeature ? 30 : 0;
+    currentSettings.value.shortcutAutoBracket = enablePromptFeature;
+    currentSettings.value.shortcutControlBracket = enablePromptFeature;
+    currentSettings.value.shortcutMoveLine = enablePromptFeature;
+});
 </script>
 
 <template>
@@ -66,23 +56,26 @@ const changePromptHeight = () => {
     </ElRow>
 
     <ElRow>
-        <ElCol :span="8">
-            <h2>📜プロンプト欄設定</h2>
+        <ElCol>
             <ElForm label-position="left" label-width="375px">
-                <ElFormItem label="Enterキーによる生成を無効化する">
+                <ElFormItem label="プロンプト関連設定を有効にする">
                     <ElSwitch
-                        v-model="currentSettings.disableEnterKeyGeneration"
+                        v-model="currentSettings.enablePromptFeature"
                         @change="saveSettings"
                     />
                 </ElFormItem>
+            </ElForm>
+        </ElCol>
+    </ElRow>
 
-                <ElFormItem label="プロンプト貼り付け時に改行を保持する">
-                    <ElSwitch v-model="currentSettings.pasteNewline" @change="saveSettings" />
-                </ElFormItem>
-
+    <ElRow>
+        <ElCol :span="8">
+            <h2>📜プロンプト欄設定</h2>
+            <ElForm label-position="left" label-width="375px">
                 <ElFormItem label='"{ }" / "[ ]" を自動で閉じる'>
                     <ElSwitch
                         v-model="currentSettings.shortcutAutoBracket"
+                        :disabled="!currentSettings.enablePromptFeature"
                         @change="saveSettings"
                     />
                 </ElFormItem>
@@ -91,6 +84,7 @@ const changePromptHeight = () => {
                     <ElInputNumber
                         v-model="currentSettings.promptWidth"
                         controls-position="right"
+                        :disabled="!currentSettings.enablePromptFeature"
                         :min="0"
                         :max="80"
                         size="small"
@@ -103,27 +97,13 @@ const changePromptHeight = () => {
                     <ElInputNumber
                         v-model="currentSettings.promptHeight"
                         controls-position="right"
+                        :disabled="!currentSettings.enablePromptFeature"
                         :min="0"
                         :max="80"
                         size="small"
                         :step="10"
-                        @change="changePromptHeight"
+                        @change="saveSettings"
                     />
-                </ElFormItem>
-
-                <ElFormItem label="プロンプト欄の高さをリサイズ可能にする">
-                    <ElTooltip
-                        :disabled="!enablePromptHeight"
-                        effect="dark"
-                        content="プロンプト欄の高さを変更する場合は設定できません。"
-                        placement="top"
-                    >
-                        <ElSwitch
-                            v-model="currentSettings.resizePromptHeight"
-                            :disabled="enablePromptHeight"
-                            @change="saveSettings"
-                        />
-                    </ElTooltip>
                 </ElFormItem>
             </ElForm>
         </ElCol>
@@ -134,12 +114,17 @@ const changePromptHeight = () => {
                 <ElFormItem label='Ctrl / Alt + ↑ / ↓キー で "{ }" / "[ ]" の数を増減する'>
                     <ElSwitch
                         v-model="currentSettings.shortcutControlBracket"
+                        :disabled="!currentSettings.enablePromptFeature"
                         @change="saveSettings"
                     />
                 </ElFormItem>
 
                 <ElFormItem label="Ctrl + Alt + ↑ / ↓キー で行を移動する">
-                    <ElSwitch v-model="currentSettings.shortcutMoveLine" @change="saveSettings" />
+                    <ElSwitch
+                        v-model="currentSettings.shortcutMoveLine"
+                        :disabled="!currentSettings.enablePromptFeature"
+                        @change="saveSettings"
+                    />
                 </ElFormItem>
             </ElForm>
         </ElCol>
@@ -188,6 +173,10 @@ const changePromptHeight = () => {
                 <ElFormItem label="モデル選択ボックスを非表示にする">
                     <ElSwitch v-model="currentSettings.hideModelSelector" @change="saveSettings" />
                 </ElFormItem>
+
+                <ElFormItem label="Director Toolsを非表示にする">
+                    <ElSwitch v-model="currentSettings.hideDirectorTools" @change="saveSettings" />
+                </ElFormItem>
             </ElForm>
         </ElCol>
 
@@ -209,13 +198,6 @@ const changePromptHeight = () => {
 
                 <ElFormItem label="Anlas消費時の確認ダイアログを表示する">
                     <ElSwitch v-model="currentSettings.confirmDialog" @change="saveSettings" />
-                </ElFormItem>
-
-                <ElFormItem label="画像読込時、自動で「画像のインポート」を選択する">
-                    <ElSwitch
-                        v-model="currentSettings.importImageWithoutConfirm"
-                        @change="saveSettings"
-                    />
                 </ElFormItem>
 
                 <ElFormItem label="生成完了時に音を鳴らす">

@@ -4,7 +4,7 @@ type TextPosition = [start: number, end: number];
 type BracketType = 'curly' | 'square';
 type Action = 'add' | 'remove';
 
-export const controlBracket = (event: KeyboardEvent) => {
+export const controlBracket = (event: KeyboardEvent, promptAreaDiv: HTMLDivElement) => {
     const isCtrl = event.ctrlKey;
     const isAlt = event.altKey;
     const isArrowUp = event.code === 'ArrowUp';
@@ -35,7 +35,7 @@ export const controlBracket = (event: KeyboardEvent) => {
                 (isTextSelected ? selectionEnd : selectionStart) +
                 (bracketAction === 'add' ? 1 : -1);
 
-            submitPrompt(target);
+            submitPrompt(target, promptAreaDiv);
         }
     };
 
@@ -194,7 +194,7 @@ const bracketText = (
     }
 };
 
-export const autoBracket = (event: InputEvent) => {
+export const autoBracket = (event: InputEvent, promptAreaDiv: HTMLDivElement) => {
     const openBraces = ['{', '['];
     const closeBraces = ['}', ']'];
     const target = event.target as HTMLTextAreaElement;
@@ -242,6 +242,6 @@ export const autoBracket = (event: InputEvent) => {
             target.selectionEnd = start + 1;
         }
 
-        submitPrompt(target);
+        submitPrompt(target, promptAreaDiv);
     }
 };

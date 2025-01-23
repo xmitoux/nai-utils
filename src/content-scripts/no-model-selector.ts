@@ -1,22 +1,20 @@
-import { createClassName } from '@/utils';
+import { getElementsByStyle } from '@/utils';
 
 export const noModelSelector = () => {
-    const proc = () => {
-        const modelSelectorChildClass = 'select css-vopfii-container';
-        const modelSelectorChild = document.querySelector(createClassName(modelSelectorChildClass));
-        if (!modelSelectorChild) {
-            return;
-        }
+    function proc() {
+        const targetStyle =
+            'display: flex; flex-direction: row; justify-content: space-between; width: 100%; padding: 10px';
 
-        const parent = modelSelectorChild.parentNode as HTMLDivElement;
-        if (!parent) {
-            return;
-        }
+        const targets = getElementsByStyle(targetStyle);
+        if (!targets.length) return;
 
-        if (parent.style.display !== 'none') {
-            parent.style.display = 'none';
+        const target = targets[0].parentElement;
+        if (!target) return;
+
+        if (target.style.display !== 'none') {
+            target.style.display = 'none';
         }
-    };
+    }
 
     new MutationObserver(proc).observe(document.body, { childList: true, subtree: true });
 };
