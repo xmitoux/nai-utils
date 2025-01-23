@@ -24,10 +24,12 @@ chrome.runtime.sendMessage({ action: ACTION_GET_SETTINGS }, (response) => {
     historyScripts(extensionSettings);
     confirmDialog(extensionSettings);
     addSliderButton(extensionSettings);
-    costomizePromptArea(extensionSettings);
+    // プロンプト関連機能が有効設定ならプロンプト欄のカスタマイズ処理を実行
+    extensionSettings.enablePromptFeature && costomizePromptArea(extensionSettings);
     withoutConfirm(extensionSettings);
     rearrangeImageSettings(extensionSettings);
-    handleButonEvents();
+    // プロンプト関連機能が有効設定ならボタンイベント追加処理を実行
+    extensionSettings.enablePromptFeature && handleButonEvents();
 
     if (extensionSettings.hideModelSelector) {
         noModelSelector();

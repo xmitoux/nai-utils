@@ -17,4 +17,5 @@ type ExtensionSettings = {
     shortcutControlBracket: boolean;
     shortcutAutoBracket: boolean;
     shortcutMoveLine: boolean;
+    enablePromptFeature: boolean;
 };

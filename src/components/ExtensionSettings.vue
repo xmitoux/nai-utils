@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watchEffect } from 'vue';
 import { ElButton, ElCol, ElForm, ElFormItem, ElInputNumber, ElRow, ElSwitch } from 'element-plus';
 import { ACTION_UPDATE_SETTINGS } from '@/constants/chrome-api';
 import { NAI_URL } from '@/constants/nai';
@@ -33,6 +33,17 @@ const settingAll = (flag: boolean) => {
 
     saveSettings();
 };
+
+// プロンプト関連設定の状態に応じて各プロンプト関連設定を変更する
+watchEffect(() => {
+    const { enablePromptFeature } = currentSettings.value;
+    currentSettings.value.shortcutAutoBracket = enablePromptFeature;
+    currentSettings.value.promptWidth = enablePromptFeature ? 30 : 0;
+    currentSettings.value.promptHeight = enablePromptFeature ? 30 : 0;
+    currentSettings.value.shortcutAutoBracket = enablePromptFeature;
+    currentSettings.value.shortcutControlBracket = enablePromptFeature;
+    currentSettings.value.shortcutMoveLine = enablePromptFeature;
+});
 </script>
 
 <template>
@@ -45,12 +56,26 @@ const settingAll = (flag: boolean) => {
     </ElRow>
 
     <ElRow>
+        <ElCol>
+            <ElForm label-position="left" label-width="375px">
+                <ElFormItem label="プロンプト関連設定を有効にする">
+                    <ElSwitch
+                        v-model="currentSettings.enablePromptFeature"
+                        @change="saveSettings"
+                    />
+                </ElFormItem>
+            </ElForm>
+        </ElCol>
+    </ElRow>
+
+    <ElRow>
         <ElCol :span="8">
             <h2>📜プロンプト欄設定</h2>
             <ElForm label-position="left" label-width="375px">
                 <ElFormItem label='"{ }" / "[ ]" を自動で閉じる'>
                     <ElSwitch
                         v-model="currentSettings.shortcutAutoBracket"
+                        :disabled="!currentSettings.enablePromptFeature"
                         @change="saveSettings"
                     />
                 </ElFormItem>
@@ -59,6 +84,7 @@ const settingAll = (flag: boolean) => {
                     <ElInputNumber
                         v-model="currentSettings.promptWidth"
                         controls-position="right"
+                        :disabled="!currentSettings.enablePromptFeature"
                         :min="0"
                         :max="80"
                         size="small"
@@ -71,6 +97,7 @@ const settingAll = (flag: boolean) => {
                     <ElInputNumber
                         v-model="currentSettings.promptHeight"
                         controls-position="right"
+                        :disabled="!currentSettings.enablePromptFeature"
                         :min="0"
                         :max="80"
                         size="small"
@@ -87,12 +114,17 @@ const settingAll = (flag: boolean) => {
                 <ElFormItem label='Ctrl / Alt + ↑ / ↓キー で "{ }" / "[ ]" の数を増減する'>
                     <ElSwitch
                         v-model="currentSettings.shortcutControlBracket"
+                        :disabled="!currentSettings.enablePromptFeature"
                         @change="saveSettings"
                     />
                 </ElFormItem>
 
                 <ElFormItem label="Ctrl + Alt + ↑ / ↓キー で行を移動する">
-                    <ElSwitch v-model="currentSettings.shortcutMoveLine" @change="saveSettings" />
+                    <ElSwitch
+                        v-model="currentSettings.shortcutMoveLine"
+                        :disabled="!currentSettings.enablePromptFeature"
+                        @change="saveSettings"
+                    />
                 </ElFormItem>
             </ElForm>
         </ElCol>

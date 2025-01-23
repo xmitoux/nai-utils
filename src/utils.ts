@@ -17,6 +17,7 @@ export const defaultExtensionSettings: ExtensionSettings = {
     shortcutControlBracket: false,
     shortcutAutoBracket: false,
     shortcutMoveLine: false,
+    enablePromptFeature: false,
 };
 
 /**
