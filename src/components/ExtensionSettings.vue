@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, watchEffect } from 'vue';
+import { ref, onMounted } from 'vue';
 import { ElButton, ElCol, ElForm, ElFormItem, ElInputNumber, ElRow, ElSwitch } from 'element-plus';
 import { ACTION_UPDATE_SETTINGS } from '@/constants/chrome-api';
 import { NAI_URL } from '@/constants/nai';
@@ -34,16 +34,20 @@ const settingAll = (flag: boolean) => {
     saveSettings();
 };
 
-// プロンプト関連設定の状態に応じて各プロンプト関連設定を変更する
-watchEffect(() => {
+// プロンプト関連設定をオフにしたらプロンプト関連設定をすべてオフにする
+function handleChangePromptFeatureEnable() {
     const { enablePromptFeature } = currentSettings.value;
-    currentSettings.value.shortcutAutoBracket = enablePromptFeature;
-    currentSettings.value.promptWidth = enablePromptFeature ? 30 : 0;
-    currentSettings.value.promptHeight = enablePromptFeature ? 30 : 0;
-    currentSettings.value.shortcutAutoBracket = enablePromptFeature;
-    currentSettings.value.shortcutControlBracket = enablePromptFeature;
-    currentSettings.value.shortcutMoveLine = enablePromptFeature;
-});
+    if (!enablePromptFeature) {
+        currentSettings.value.shortcutAutoBracket = false;
+        currentSettings.value.promptWidth = 0;
+        currentSettings.value.promptHeight = 0;
+        currentSettings.value.shortcutAutoBracket = false;
+        currentSettings.value.shortcutControlBracket = false;
+        currentSettings.value.shortcutMoveLine = false;
+    }
+
+    saveSettings();
+}
 </script>
 
 <template>
@@ -61,7 +65,7 @@ watchEffect(() => {
                 <ElFormItem label="プロンプト関連設定を有効にする">
                     <ElSwitch
                         v-model="currentSettings.enablePromptFeature"
-                        @change="saveSettings"
+                        @change="handleChangePromptFeatureEnable"
                     />
                 </ElFormItem>
             </ElForm>
