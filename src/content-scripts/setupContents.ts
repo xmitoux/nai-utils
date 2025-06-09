@@ -108,7 +108,7 @@ export const setupContents = ({
                     overlayTmp.style.left = '0';
                     overlayTmp.style.right = '0';
                     overlayTmp.style.bottom = '0';
-                    overlayTmp.style.background = 'rgba(128, 128, 128, 0.3)';
+                    overlayTmp.style.border = '3px solid rgba(0, 255, 235, 0.3)';
                     overlayTmp.style.zIndex = '10'; // ないとオーバーレイされない
 
                     return overlayTmp;
