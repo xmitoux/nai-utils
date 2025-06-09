@@ -75,12 +75,16 @@ export const setupContents = ({
         const setupGeneratedImage = () => {
             // 生成画像要素を取得
             const imageElements = document.querySelectorAll<HTMLImageElement>('img');
+
             if (!imageElements.length) {
                 return;
             }
 
             // inpaint中は対象画像がimgタグとして2つ存在するので3つ目を取得
-            generatedImage = imageElements.length === 1 ? imageElements[0] : imageElements[2];
+            // generatedImage = imageElements.length === 1 ? imageElements[0] : imageElements[2];
+
+            // 仕様変更対応 元のinpaint条件がよくわからないが、1つ目のimg固定でよさそう
+            generatedImage = imageElements[0];
         };
         setupGeneratedImage();
 
