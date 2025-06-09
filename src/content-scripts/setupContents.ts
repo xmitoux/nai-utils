@@ -75,12 +75,16 @@ export const setupContents = ({
         const setupGeneratedImage = () => {
             // 生成画像要素を取得
             const imageElements = document.querySelectorAll<HTMLImageElement>('img');
+
             if (!imageElements.length) {
                 return;
             }
 
             // inpaint中は対象画像がimgタグとして2つ存在するので3つ目を取得
-            generatedImage = imageElements.length === 1 ? imageElements[0] : imageElements[2];
+            // generatedImage = imageElements.length === 1 ? imageElements[0] : imageElements[2];
+
+            // 仕様変更対応 元のinpaint条件がよくわからないが、1つ目のimg固定でよさそう
+            generatedImage = imageElements[0];
         };
         setupGeneratedImage();
 
@@ -104,7 +108,7 @@ export const setupContents = ({
                     overlayTmp.style.left = '0';
                     overlayTmp.style.right = '0';
                     overlayTmp.style.bottom = '0';
-                    overlayTmp.style.background = 'rgba(128, 128, 128, 0.3)';
+                    overlayTmp.style.border = '3px solid rgba(0, 255, 235, 0.3)';
                     overlayTmp.style.zIndex = '10'; // ないとオーバーレイされない
 
                     return overlayTmp;
