@@ -27,7 +27,6 @@ module.exports = {
     },
     plugins: ['@typescript-eslint', 'vue'],
     rules: {
-        'no-console': ['warn', { allow: ['warn', 'error'] }],
         'no-undef': 'off',
         'array-callback-return': ['error', { checkForEach: true }],
         '@typescript-eslint/no-unused-vars': [

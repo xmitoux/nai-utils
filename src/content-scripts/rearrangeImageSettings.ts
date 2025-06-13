@@ -8,17 +8,15 @@ export const rearrangeImageSettings = ({ rearrangeImageSettings }: ExtensionSett
                 return;
             }
 
-            // 生成画像の上にあるaタグ持ちのdivを探す
-            const targetDivs = Array.from(document.querySelectorAll<HTMLDivElement>('div')).filter(
-                (div) => {
-                    const firstChild = div.firstChild;
+            // 生成画像の上にある<div class="display-grid-top">を探す
+            const targetDiv = document.querySelector<HTMLDivElement>('div.display-grid-top');
+            if (!targetDiv) {
+                console.warn('画像設定欄の挿入先が見つかりません。');
+                return;
+            }
 
-                    return firstChild && firstChild.nodeName === 'A';
-                },
-            );
-
-            // 1つ目は左ペインの上にある要素なので2つ目を取得しそこに挿入
-            const targetParentDiv = targetDivs?.[1]?.parentElement?.parentElement as HTMLDivElement;
+            // 挿入先に画像設定要素を追加
+            const targetParentDiv = targetDiv?.parentElement?.parentElement as HTMLDivElement;
             if (targetParentDiv && !targetParentDiv.dataset.addedImageSettings) {
                 targetParentDiv?.prepend(imageSettings);
                 targetParentDiv.dataset.addedImageSettings = 'true';
