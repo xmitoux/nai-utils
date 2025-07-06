@@ -101,16 +101,19 @@ export const setupContents = ({
             }
 
             if (!imageGrandParent.dataset.overlayAdded) {
+                // 閲覧済み画像の枠線を追加する
+                // NOTE: 元々はオーバーレイだったが見づらいしドラッグできないので変更した
                 const createOverlay = () => {
                     const overlayTmp = document.createElement('div');
                     overlayTmp.style.display = 'none';
                     overlayTmp.style.position = 'absolute';
-                    overlayTmp.style.top = '0';
-                    overlayTmp.style.left = '0';
-                    overlayTmp.style.right = '0';
-                    overlayTmp.style.bottom = '0';
+                    // 画像の上と左にずらして配置しつつ大きくすることで枠線にする
+                    overlayTmp.style.top = '-5px';
+                    overlayTmp.style.left = '-5px';
+                    overlayTmp.style.width = 'calc(100% + 10px)';
+                    overlayTmp.style.height = 'calc(100% + 10px)';
+                    overlayTmp.style.zIndex = '-1'; // ドラッグできるようにするため
                     overlayTmp.style.border = '5px solid rgba(255, 128, 200, 0.7)';
-                    overlayTmp.style.zIndex = '10'; // ないとオーバーレイされない
 
                     return overlayTmp;
                 };
@@ -119,7 +122,7 @@ export const setupContents = ({
 
                 // imgタグができる前に追加すると画面が止まる(謎)のでちょっと待つ
                 setTimeout(() => {
-                    imageGrandParent.prepend(overlay!);
+                    imageGrandParent.append(overlay!);
                 }, 100);
 
                 imageGrandParent.dataset.overlayAdded = 'true';
