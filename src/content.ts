@@ -6,9 +6,7 @@ import { ACTION_GET_SETTINGS } from '@/constants/chrome-api';
 import { setupContents } from './content-scripts/setupContents';
 import { confirmDialog } from './content-scripts/confrimDialog';
 import { addSliderButton } from './content-scripts/addSliderButton';
-import { costomizePromptArea } from './content-scripts/customizePromptArea';
 import { rearrangeImageSettings } from './content-scripts/rearrangeImageSettings';
-import { handleButonEvents } from './content-scripts/handleButonEvents';
 import { removeDirectorTools } from './content-scripts/removeDirectorTools';
 import { removeGetStarted } from './content-scripts/removeGetStarted';
 
@@ -25,12 +23,8 @@ chrome.runtime.sendMessage({ action: ACTION_GET_SETTINGS }, (response) => {
     historyScripts(extensionSettings);
     confirmDialog(extensionSettings);
     addSliderButton(extensionSettings);
-    // プロンプト関連機能が有効設定ならプロンプト欄のカスタマイズ処理を実行
-    extensionSettings.enablePromptFeature && costomizePromptArea(extensionSettings);
     withoutConfirm(extensionSettings);
     rearrangeImageSettings(extensionSettings);
-    // プロンプト関連機能が有効設定ならボタンイベント追加処理を実行
-    extensionSettings.enablePromptFeature && handleButonEvents();
 
     if (extensionSettings.hideModelSelector) {
         noModelSelector();

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { ElButton, ElCol, ElForm, ElFormItem, ElInputNumber, ElRow, ElSwitch } from 'element-plus';
+import { ElButton, ElCol, ElForm, ElFormItem, ElRow, ElSwitch } from 'element-plus';
 import { ACTION_UPDATE_SETTINGS } from '@/constants/chrome-api';
 import { NAI_URL } from '@/constants/nai';
 import { defaultExtensionSettings } from '@/utils';
@@ -24,120 +24,26 @@ const saveSettings = async () => {
 const settingAll = (flag: boolean) => {
     Object.keys(currentSettings.value).forEach((key) => {
         const settingKey = key as keyof ExtensionSettings;
-        if (settingKey !== 'promptWidth' && settingKey !== 'promptHeight') {
-            currentSettings.value[settingKey] = flag;
-        } else {
-            currentSettings.value[settingKey] = flag ? 30 : 0;
-        }
+        currentSettings.value[settingKey] = flag;
     });
 
     saveSettings();
 };
-
-// プロンプト関連設定をオフにしたらプロンプト関連設定をすべてオフにする
-function handleChangePromptFeatureEnable() {
-    const { enablePromptFeature } = currentSettings.value;
-    if (!enablePromptFeature) {
-        currentSettings.value.shortcutAutoBracket = false;
-        currentSettings.value.promptWidth = 0;
-        currentSettings.value.promptHeight = 0;
-        currentSettings.value.shortcutAutoBracket = false;
-        currentSettings.value.shortcutControlBracket = false;
-        currentSettings.value.shortcutMoveLine = false;
-    }
-
-    saveSettings();
-}
 </script>
 
 <template>
-    <ElRow align="middle">
-        <ElCol :span="2">
-            <h1>🎛️NAI utils</h1>
-        </ElCol>
-        <ElButton @click="settingAll(true)">すべてON</ElButton>
-        <ElButton @click="settingAll(false)">すべてOFF</ElButton>
-    </ElRow>
+    <div style="margin-bottom: 20px">
+        <h1>🎛️NAI utils</h1>
+        <div style="margin-top: 10px">
+            <ElButton @click="settingAll(true)" style="margin-right: 10px">すべてON</ElButton>
+            <ElButton @click="settingAll(false)">すべてOFF</ElButton>
+        </div>
+    </div>
 
     <ElRow>
-        <ElCol>
-            <ElForm label-position="left" label-width="375px">
-                <ElFormItem label="プロンプト関連設定を有効にする">
-                    <ElSwitch
-                        v-model="currentSettings.enablePromptFeature"
-                        @change="handleChangePromptFeatureEnable"
-                    />
-                </ElFormItem>
-            </ElForm>
-        </ElCol>
-    </ElRow>
-
-    <ElRow>
-        <ElCol :span="8">
-            <h2>📜プロンプト欄設定</h2>
-            <ElForm label-position="left" label-width="375px">
-                <ElFormItem label='"{ }" / "[ ]" を自動で閉じる'>
-                    <ElSwitch
-                        v-model="currentSettings.shortcutAutoBracket"
-                        :disabled="!currentSettings.enablePromptFeature"
-                        @change="saveSettings"
-                    />
-                </ElFormItem>
-
-                <ElFormItem label="プロンプト欄の幅を変更する(%) (0でOFF)">
-                    <ElInputNumber
-                        v-model="currentSettings.promptWidth"
-                        controls-position="right"
-                        :disabled="!currentSettings.enablePromptFeature"
-                        :min="0"
-                        :max="80"
-                        size="small"
-                        :step="10"
-                        @change="saveSettings"
-                    />
-                </ElFormItem>
-
-                <ElFormItem label="プロンプト欄の高さを変更する(%) (0でOFF)">
-                    <ElInputNumber
-                        v-model="currentSettings.promptHeight"
-                        controls-position="right"
-                        :disabled="!currentSettings.enablePromptFeature"
-                        :min="0"
-                        :max="80"
-                        size="small"
-                        :step="10"
-                        @change="saveSettings"
-                    />
-                </ElFormItem>
-            </ElForm>
-        </ElCol>
-
-        <ElCol :span="8">
-            <h2>⌨プロンプト欄ショートカットキー設定</h2>
-            <ElForm label-position="left" label-width="375px">
-                <ElFormItem label='Ctrl / Alt + ↑ / ↓キー で "{ }" / "[ ]" の数を増減する'>
-                    <ElSwitch
-                        v-model="currentSettings.shortcutControlBracket"
-                        :disabled="!currentSettings.enablePromptFeature"
-                        @change="saveSettings"
-                    />
-                </ElFormItem>
-
-                <ElFormItem label="Ctrl + Alt + ↑ / ↓キー で行を移動する">
-                    <ElSwitch
-                        v-model="currentSettings.shortcutMoveLine"
-                        :disabled="!currentSettings.enablePromptFeature"
-                        @change="saveSettings"
-                    />
-                </ElFormItem>
-            </ElForm>
-        </ElCol>
-    </ElRow>
-
-    <ElRow>
-        <ElCol :span="8">
+        <ElCol :sm="24" :md="8" :lg="8" :xl="8">
             <h2>🕘生成履歴設定</h2>
-            <ElForm label-position="left" label-width="375px">
+            <ElForm label-position="left" label-width="280px">
                 <ElFormItem label="生成履歴を右クリックで保存する">
                     <ElSwitch
                         v-model="currentSettings.enableHistorySaveShortcut"
@@ -163,10 +69,10 @@ function handleChangePromptFeatureEnable() {
                 </ElFormItem>
             </ElForm>
         </ElCol>
-        <ElCol :span="8">
+        <ElCol :sm="24" :md="8" :lg="8" :xl="8">
             <h2>👀見た目の設定</h2>
 
-            <ElForm label-position="left" label-width="375px">
+            <ElForm label-position="left" label-width="280px">
                 <ElFormItem label="画像設定欄を生成画像上部に移動する">
                     <ElSwitch
                         v-model="currentSettings.rearrangeImageSettings"
@@ -188,10 +94,10 @@ function handleChangePromptFeatureEnable() {
             </ElForm>
         </ElCol>
 
-        <ElCol :span="8">
+        <ElCol :sm="24" :md="8" :lg="8" :xl="8">
             <h2>🛠️その他の設定</h2>
 
-            <ElForm label-position="left" label-width="375px">
+            <ElForm label-position="left" label-width="280px">
                 <ElFormItem label="画面上のどこでも Ctrl + Enter で生成する">
                     <ElSwitch v-model="currentSettings.generateEverywhere" @change="saveSettings" />
                 </ElFormItem>

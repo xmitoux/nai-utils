@@ -6,17 +6,10 @@ type ExtensionSettings = {
     hideModelSelector: boolean;
     hideDirectorTools: boolean;
     hideGetStarted: boolean;
-    shrinkPromptArea: boolean;
     wheelHistory: boolean;
     highlightViewedHistory: boolean;
     confirmDialog: boolean;
     sliderButton: boolean;
     generatedSound: boolean;
-    promptWidth: number;
-    promptHeight: number;
     rearrangeImageSettings: boolean;
-    shortcutControlBracket: boolean;
-    shortcutAutoBracket: boolean;
-    shortcutMoveLine: boolean;
-    enablePromptFeature: boolean;
 };
