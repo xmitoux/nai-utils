@@ -10,8 +10,6 @@ export const removeGetStarted = () => {
                 div.textContent?.trim() === DIV_TEXT_GET_STARTED_JA,
         );
 
-        console.log('getStarted target:', target);
-
         if (!target) return;
 
         // 親要素ごと削除
