@@ -3,6 +3,7 @@ export const defaultExtensionSettings: ExtensionSettings = {
     datetimeFilename: false,
     hideModelSelector: false,
     hideDirectorTools: false,
+    hideGetStarted: false,
     enableDeleteHistoryWithoutConfirm: false,
     enableHistorySaveShortcut: false,
     wheelHistory: false,

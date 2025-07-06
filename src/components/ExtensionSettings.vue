@@ -181,6 +181,10 @@ function handleChangePromptFeatureEnable() {
                 <ElFormItem label="Director Toolsを非表示にする">
                     <ElSwitch v-model="currentSettings.hideDirectorTools" @change="saveSettings" />
                 </ElFormItem>
+
+                <ElFormItem label="スタート画面を非表示にする">
+                    <ElSwitch v-model="currentSettings.hideGetStarted" @change="saveSettings" />
+                </ElFormItem>
             </ElForm>
         </ElCol>
 
