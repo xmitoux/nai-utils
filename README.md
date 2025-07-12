@@ -2,12 +2,11 @@
 
 NAIがちょっと便利になるかもしれない機能をまとめたChrome拡張です。
 
-![image](https://github.com/user-attachments/assets/255c6430-39d4-452f-8a31-9e2433af352c)
+![image](https://github.com/user-attachments/assets/37facf3d-d124-42f8-b7ab-0078212f0435)
 
 ## 📲インストール
 
-1. Releasesから`NaiUtils.zip`をダウンロードし、解凍します。
-   ![image](https://github.com/user-attachments/assets/5c1165d5-8603-4792-b402-a3c27c1d6578)
+1. [Releases](https://github.com/xmitoux/nai-utils/releases)から`nai-utils.zip`をダウンロードし、解凍します。
 2. ChromeのURL欄に`chrome://extensions/`と入力し、拡張機能の管理画面に移動します。
 3. 右上隅で「デベロッパーモード」をONにします。
 4. 「パッケージ化されていない拡張機能を読み込む」をクリックし、手順1.で解凍された"dist"フォルダを選択すると拡張機能がインストールされます。
@@ -24,7 +23,7 @@ NAIがちょっと便利になるかもしれない機能をまとめたChrome�
 > -   予期せぬ動作やエラーを避けるため、Anlasの購入やサブスクリプションプランの変更などの重要な操作を行う場合、**必ず拡張機能を停止してください。**
 > -   停止するには、画像のようにChromeの拡張機能管理画面で NAI utils のスイッチをOFFにし、NAIをリロードします。
 
-![Image](https://github.com/user-attachments/assets/e1d6a5f6-7a1c-46f0-b0a8-69e3c1ea1e4f)
+![Image](https://github.com/user-attachments/assets/a970e1ce-37a7-4405-9a0f-0d04aa5aa30e)
 
 ## ⚙️設定
 
@@ -46,7 +45,7 @@ NAIがちょっと便利になるかもしれない機能をまとめたChrome�
 
 #### 閲覧済みの生成履歴の強調
 
-一度選択した生成履歴画像に水色の枠線を付け、閲覧済みであることをわかりやすくします。
+一度選択した生成履歴画像に薄い赤色の枠線を付け、閲覧済みであることをわかりやすくします。
 
 #### 生成履歴の即時削除
 
@@ -118,7 +117,7 @@ NAI初期表示時のスタート画面(サンプル画像一覧)を非表示に
 -   標準の❌️ボタンと同等の操作
 
 > [!NOTE]
-> 以下のNAI標準ショートカットキーも存在します。
+> 以下のNAI標準ショートカットキーも使用できます。
 >
 > -   ペンに変更する: `B`キー (`B`rush)
 > -   消しゴムに変更する: `E`キー (`E`raser)
@@ -137,5 +136,6 @@ NAI初期表示時のスタート画面(サンプル画像一覧)を非表示に
 
 -   生成完了時に音を鳴らします。
 -   音はデフォルトのものから変更可能です。任意のmp3ファイルを`generated-sound.mp3`にリネームし、解凍した拡張機能のフォルダ配下の`dist/assets/`に置いたあと、NAIをリロードしてください。
-    > [!WARNING]
-    > 現在のバージョンでは動作が不安定です(鳴るときと鳴らないときがあります)。
+
+> [!WARNING]
+> 現在のバージョンでは動作が不安定です(鳴るときと鳴らないときがあります)。
