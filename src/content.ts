@@ -35,9 +35,13 @@ chrome.runtime.sendMessage({ action: ACTION_GET_SETTINGS }, (response) => {
         removeDirectorTools();
     }
 
+    // スタート画面削除
     if (extensionSettings.hideGetStarted) {
         removeGetStarted();
     }
 
-    addInpaintShortcuts();
+    // inpaintショートカットキー
+    if (extensionSettings.inpaintShortcuts) {
+        addInpaintShortcuts();
+    }
 });

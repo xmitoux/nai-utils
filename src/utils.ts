@@ -10,6 +10,7 @@ export const defaultExtensionSettings: ExtensionSettings = {
     highlightViewedHistory: false,
     confirmDialog: false,
     sliderButton: false,
+    inpaintShortcuts: false,
     generatedSound: false,
     rearrangeImageSettings: false,
 };

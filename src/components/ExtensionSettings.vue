@@ -110,6 +110,10 @@ const settingAll = (flag: boolean) => {
                     <ElSwitch v-model="currentSettings.sliderButton" @change="saveSettings" />
                 </ElFormItem>
 
+                <ElFormItem label="Inpaint用のショートカットキーを使用する">
+                    <ElSwitch v-model="currentSettings.inpaintShortcuts" @change="saveSettings" />
+                </ElFormItem>
+
                 <ElFormItem label="Anlas消費時の確認ダイアログを表示する">
                     <ElSwitch v-model="currentSettings.confirmDialog" @change="saveSettings" />
                 </ElFormItem>
