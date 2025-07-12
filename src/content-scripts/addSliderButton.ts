@@ -1,3 +1,6 @@
+import { INPAINT_PEN_SIZE_BUTTON_CLASS } from '@/constants/nai';
+import { addEvent } from '@/utils';
+
 export const addSliderButton = ({ sliderButton }: ExtensionSettings) => {
     const proc = () => {
         const createSliderButton = () => {
@@ -74,18 +77,32 @@ export const addSliderButton = ({ sliderButton }: ExtensionSettings) => {
                     sizeButton.style.backgroundColor = 'transparent';
                     sizeButton.style.cursor = 'pointer';
 
+                    if (buttonConfig.type === 'Pen Size' || buttonConfig.type === 'ペンサイズ') {
+                        // inpaintのペンサイズボタンにのみclassを追加
+                        // (ショートカット機能で特定するため)
+                        sizeButton.classList.add(INPAINT_PEN_SIZE_BUTTON_CLASS);
+                        sizeButton.classList.add(sizeOperator === '+' ? 'increase' : 'decrease');
+                        // sizeButton.className = `${INPAINT_PEN_SIZE_BUTTON_CLASS}-${
+                        //     sizeOperator ? 'increase' : 'decrease'
+                        // }`;
+                    }
+
                     const onClick = () => {
                         const currentSliderValue = Number(slider.value);
                         const resultValue =
                             sizeOperator === '+'
                                 ? currentSliderValue + buttonConfig.step
                                 : currentSliderValue - buttonConfig.step;
-                        slider.value = resultValue.toString();
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        (slider as any)._valueTracker = '';
-                        slider.dispatchEvent(new Event('input', { bubbles: true }));
+
+                        // 微妙にカクつくときがあるので少し遅延を入れる
+                        setTimeout(() => {
+                            slider.value = resultValue.toString();
+                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                            (slider as any)._valueTracker = '';
+                            slider.dispatchEvent(new Event('input', { bubbles: true }));
+                        }, 10);
                     };
-                    sizeButton.addEventListener('click', onClick);
+                    addEvent(sizeButton, 'click', 'sizeButtonAdded', onClick);
 
                     return sizeButton;
                 };

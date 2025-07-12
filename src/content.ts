@@ -9,6 +9,7 @@ import { addSliderButton } from './content-scripts/addSliderButton';
 import { rearrangeImageSettings } from './content-scripts/rearrangeImageSettings';
 import { removeDirectorTools } from './content-scripts/removeDirectorTools';
 import { removeGetStarted } from './content-scripts/removeGetStarted';
+import { addInpaintShortcuts } from './content-scripts/addInpaintShortcuts';
 
 // ページ読み込み時に設定を取得する
 chrome.runtime.sendMessage({ action: ACTION_GET_SETTINGS }, (response) => {
@@ -37,4 +38,6 @@ chrome.runtime.sendMessage({ action: ACTION_GET_SETTINGS }, (response) => {
     if (extensionSettings.hideGetStarted) {
         removeGetStarted();
     }
+
+    addInpaintShortcuts();
 });

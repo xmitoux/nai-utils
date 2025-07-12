@@ -18,3 +18,5 @@ export const BUTTON_TEXT_DIRECTOR_TOOLS_EN = 'Director Tools';
 export const BUTTON_TEXT_DIRECTOR_TOOLS_JA = 'ディレクターツール';
 export const DIV_TEXT_GET_STARTED_EN = 'Get Started';
 export const DIV_TEXT_GET_STARTED_JA = 'ここから始めましょう！';
+
+export const INPAINT_PEN_SIZE_BUTTON_CLASS = 'inpaint-pen-size-button';

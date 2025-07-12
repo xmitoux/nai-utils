@@ -29,9 +29,10 @@ export const addEvent = <T extends Event>(
     event: keyof HTMLElementEventMap,
     flagName: string,
     listener: (event: T) => void,
+    capture: boolean = false,
 ) => {
     if (element && !element.dataset[flagName]) {
-        element.addEventListener(event, (e) => listener(e as T));
+        element.addEventListener(event, (e) => listener(e as T), { capture });
         element.dataset[flagName] = 'true';
     }
 };
