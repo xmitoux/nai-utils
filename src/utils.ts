@@ -10,6 +10,7 @@ export const defaultExtensionSettings: ExtensionSettings = {
     highlightViewedHistory: false,
     confirmDialog: false,
     sliderButton: false,
+    inpaintShortcuts: false,
     generatedSound: false,
     rearrangeImageSettings: false,
 };
@@ -29,9 +30,10 @@ export const addEvent = <T extends Event>(
     event: keyof HTMLElementEventMap,
     flagName: string,
     listener: (event: T) => void,
+    capture: boolean = false,
 ) => {
     if (element && !element.dataset[flagName]) {
-        element.addEventListener(event, (e) => listener(e as T));
+        element.addEventListener(event, (e) => listener(e as T), { capture });
         element.dataset[flagName] = 'true';
     }
 };
@@ -82,3 +84,73 @@ export function getElementsByStyle(styles: string): HTMLElement[] {
 
     return matchingElements;
 }
+
+/** テキストボタンを取得する */
+export const getTextButton = (
+    textButtons: HTMLButtonElement[],
+    buttonTextEn: string,
+    buttonTextJa: string,
+): HTMLButtonElement | undefined => {
+    for (const button of textButtons) {
+        const buttonText = button.textContent;
+        if (buttonText?.includes(buttonTextEn) || buttonText?.includes(buttonTextJa)) {
+            // 最初の1個だけを取得
+            return button;
+        }
+    }
+
+    return undefined;
+};
+
+/** アイコンボタンを取得する */
+export const getIconButton = (
+    iconButtons: HTMLButtonElement[],
+    buttonIconName: string,
+): HTMLButtonElement | undefined => {
+    const targetButton = iconButtons.find((button) => {
+        if ([...button.children].some((child) => child.tagName === 'SPAN')) {
+            // ボタン直下にspanを含む場合(テキストボタン)はスルー
+            // (upscaleのアイコンがi2i欄と被っているため)
+            return undefined;
+        }
+
+        const iconDiv = button.querySelector<HTMLDivElement>('div');
+        if (!iconDiv) {
+            return undefined;
+        }
+
+        // アイコンのmask-imageからURLを取得しその名前で特定
+        const iconUrl = getComputedStyle(iconDiv).maskImage;
+        return iconUrl.includes(buttonIconName);
+    });
+
+    return targetButton!;
+};
+
+/**
+ * アイコンボタンリストを取得する
+ * (一意に定まらないとき用)
+ */
+export const getIconButtons = (
+    iconButtons: HTMLButtonElement[],
+    buttonIconName: string,
+): HTMLButtonElement[] => {
+    const targetButtons = iconButtons.filter((button) => {
+        if ([...button.children].some((child) => child.tagName === 'SPAN')) {
+            // ボタン直下にspanを含む場合(テキストボタン)はスルー
+            // (upscaleのアイコンがi2i欄と被っているため)
+            return undefined;
+        }
+
+        const iconDiv = button.querySelector<HTMLDivElement>('div');
+        if (!iconDiv) {
+            return undefined;
+        }
+
+        // アイコンのmask-imageからURLを取得しその名前で特定
+        const iconUrl = getComputedStyle(iconDiv).maskImage;
+        return iconUrl.includes(buttonIconName);
+    });
+
+    return targetButtons;
+};

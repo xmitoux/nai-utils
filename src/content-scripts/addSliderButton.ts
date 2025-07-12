@@ -1,3 +1,5 @@
+import { addEvent } from '@/utils';
+
 export const addSliderButton = ({ sliderButton }: ExtensionSettings) => {
     const proc = () => {
         const createSliderButton = () => {
@@ -80,12 +82,16 @@ export const addSliderButton = ({ sliderButton }: ExtensionSettings) => {
                             sizeOperator === '+'
                                 ? currentSliderValue + buttonConfig.step
                                 : currentSliderValue - buttonConfig.step;
-                        slider.value = resultValue.toString();
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        (slider as any)._valueTracker = '';
-                        slider.dispatchEvent(new Event('input', { bubbles: true }));
+
+                        // 微妙にカクつくときがあるので少し遅延を入れる
+                        setTimeout(() => {
+                            slider.value = resultValue.toString();
+                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                            (slider as any)._valueTracker = '';
+                            slider.dispatchEvent(new Event('input', { bubbles: true }));
+                        }, 10);
                     };
-                    sizeButton.addEventListener('click', onClick);
+                    addEvent(sizeButton, 'click', 'sizeButtonAdded', onClick);
 
                     return sizeButton;
                 };

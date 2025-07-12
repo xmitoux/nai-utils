@@ -10,6 +10,7 @@ type ExtensionSettings = {
     highlightViewedHistory: boolean;
     confirmDialog: boolean;
     sliderButton: boolean;
+    inpaintShortcuts: boolean;
     generatedSound: boolean;
     rearrangeImageSettings: boolean;
 };
