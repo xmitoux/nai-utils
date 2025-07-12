@@ -9,6 +9,7 @@ import {
     DIV_TEXT_IMAGE_SETTINGS_EN,
     DIV_TEXT_IMAGE_SETTINGS_JA,
 } from '@/constants/nai';
+import { getIconButton } from '@/utils';
 
 export let generateButton: HTMLButtonElement | undefined;
 export let upscaleButtonText: HTMLButtonElement | undefined;
@@ -58,9 +59,9 @@ export const setupContents = ({ highlightViewedHistory }: ExtensionSettings) => 
         setupTextButtons();
 
         const setupIconButtons = () => {
-            saveButton = setupIconButton(buttons, BUTTON_ICON_SAVE);
-            variationButton = setupIconButton(buttons, BUTTON_ICON_VARIATIONS);
-            upscaleButton = setupIconButton(buttons, BUTTON_ICON_UPSCALE);
+            saveButton = getIconButton(buttons, BUTTON_ICON_SAVE);
+            variationButton = getIconButton(buttons, BUTTON_ICON_VARIATIONS);
+            upscaleButton = getIconButton(buttons, BUTTON_ICON_UPSCALE);
         };
         setupIconButtons();
 
@@ -141,26 +142,4 @@ export const setupContents = ({ highlightViewedHistory }: ExtensionSettings) => 
         };
         setupImageSettings();
     }
-};
-
-const setupIconButton = (
-    iconButtons: HTMLButtonElement[],
-    buttonIconName: string,
-): HTMLButtonElement => {
-    const targetButton = iconButtons.find((button) => {
-        if ([...button.children].some((child) => child.tagName === 'SPAN')) {
-            // ボタン直下にspanを含む場合(テキストボタン)はスルー
-            // (upscaleのアイコンがi2i欄と被っているため)
-            return false;
-        }
-
-        const iconDiv = button.querySelector<HTMLDivElement>('div');
-        if (!iconDiv) {
-            return false;
-        }
-
-        const iconUrl = getComputedStyle(iconDiv).maskImage;
-        return iconUrl.includes(buttonIconName);
-    });
-    return targetButton!;
 };

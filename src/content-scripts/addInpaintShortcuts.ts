@@ -1,8 +1,14 @@
-import { INPAINT_PEN_SIZE_BUTTON_CLASS } from '@/constants/nai';
-import { addEvent } from '@/utils';
+import {
+    BUTTON_ICON_CLOSE,
+    BUTTON_ICON_TRASH,
+    BUTTON_TEXT_INPAINT_SAVE_AND_CLOSE_EN,
+    BUTTON_TEXT_INPAINT_SAVE_AND_CLOSE_JA,
+    INPAINT_PEN_SIZE_BUTTON_CLASS,
+} from '@/constants/nai';
+import { getIconButton, getIconButtons, getTextButton } from '@/utils';
 
 export const addInpaintShortcuts = () => {
-    addEvent(document.body, 'keydown', 'inpaintPenShortcut', handleKeyDown, true);
+    document.body.addEventListener('keydown', handleKeyDown, { capture: true });
 };
 
 function handleKeyDown(event: KeyboardEvent) {
@@ -55,21 +61,14 @@ function isInpaintPage(): boolean {
         return false;
     }
 
-    // inpaint画面のボタン数を確認
-    const inpaintPageButtonCount = 18;
-    const buttons = getAllButtonElements();
-    console.log({ '📠 buttons 📠': buttons });
-    if (buttons.length !== inpaintPageButtonCount) {
-        console.warn('inpaint画面ではない可能性があります。');
-        return false;
-    }
-
     return true;
 }
 
 /** 全てのボタン要素を取得 */
-function getAllButtonElements(): NodeListOf<HTMLButtonElement> {
-    return document.querySelectorAll<HTMLButtonElement>('button');
+function getAllButtonElements(): HTMLButtonElement[] {
+    console.log([...document.querySelectorAll<HTMLButtonElement>('button')]);
+
+    return [...document.querySelectorAll<HTMLButtonElement>('button')];
 }
 
 /** ペンサイズを変更する */
@@ -117,26 +116,43 @@ function clickButtonMultiple(button: HTMLButtonElement, times: number) {
     }, 30);
 }
 
-/** 指定インデックスのボタンをクリックする */
-function clickTargetIndexButton(index: number) {
-    const targetButton = getAllButtonElements()[index];
-    targetButton?.click();
-}
-
 /** マスクを保存する */
 function saveMask() {
-    // inpaint画面のマスク保存ボタンは8番目
-    clickTargetIndexButton(8);
+    const button = getTextButton(
+        getAllButtonElements(),
+        BUTTON_TEXT_INPAINT_SAVE_AND_CLOSE_EN,
+        BUTTON_TEXT_INPAINT_SAVE_AND_CLOSE_JA,
+    );
+
+    if (!button) {
+        console.warn('保存ボタンが見つかりません。');
+        return;
+    }
+
+    button.click();
 }
 
 /** マスクを削除する */
 function removeMask() {
-    // inpaint画面のマスク削除ボタンは13番目
-    clickTargetIndexButton(13);
+    const button = getIconButton(getAllButtonElements(), BUTTON_ICON_TRASH);
+
+    if (!button) {
+        console.warn('削除ボタンが見つかりません。');
+        return;
+    }
+
+    button.click();
 }
 
 /** inpaint画面を閉じる */
 function closeInpaint() {
-    // inpaint画面の閉じるボタンは9番目
-    clickTargetIndexButton(9);
+    const buttons = getIconButtons(getAllButtonElements(), BUTTON_ICON_CLOSE);
+    console.log('閉じるボタン:', buttons);
+
+    if (buttons.length < 2 || !buttons[1]) {
+        console.warn('閉じるボタンが見つかりません。');
+        return;
+    }
+
+    buttons[1].click();
 }
