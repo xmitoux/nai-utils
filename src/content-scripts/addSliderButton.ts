@@ -1,4 +1,3 @@
-import { INPAINT_PEN_SIZE_BUTTON_CLASS } from '@/constants/nai';
 import { addEvent } from '@/utils';
 
 export const addSliderButton = ({ sliderButton }: ExtensionSettings) => {
@@ -76,16 +75,6 @@ export const addSliderButton = ({ sliderButton }: ExtensionSettings) => {
                     sizeButton.style.width = '20px';
                     sizeButton.style.backgroundColor = 'transparent';
                     sizeButton.style.cursor = 'pointer';
-
-                    if (buttonConfig.type === 'Pen Size' || buttonConfig.type === 'ペンサイズ') {
-                        // inpaintのペンサイズボタンにのみclassを追加
-                        // (ショートカット機能で特定するため)
-                        sizeButton.classList.add(INPAINT_PEN_SIZE_BUTTON_CLASS);
-                        sizeButton.classList.add(sizeOperator === '+' ? 'increase' : 'decrease');
-                        // sizeButton.className = `${INPAINT_PEN_SIZE_BUTTON_CLASS}-${
-                        //     sizeOperator ? 'increase' : 'decrease'
-                        // }`;
-                    }
 
                     const onClick = () => {
                         const currentSliderValue = Number(slider.value);

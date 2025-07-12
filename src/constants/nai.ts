@@ -27,6 +27,3 @@ export const DIV_TEXT_IMAGE_SETTINGS_EN = 'Image Settings';
 export const DIV_TEXT_IMAGE_SETTINGS_JA = '画像設定';
 export const DIV_TEXT_GET_STARTED_EN = 'Get Started';
 export const DIV_TEXT_GET_STARTED_JA = 'ここから始めましょう！';
-
-// inpaintのペンサイズボタンのクラス名
-export const INPAINT_PEN_SIZE_BUTTON_CLASS = 'inpaint-pen-size-button';
